@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# FoodExpress
-=======
 # FoodExpress API
 ## Structure
 - `/users`
@@ -13,4 +10,3 @@
 - `/menus`
   - Admin-only creation, update and deletion
   - Public read access
->>>>>>> 2be410a (Laid out basic structure and began documentation)

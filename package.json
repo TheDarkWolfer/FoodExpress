@@ -1,0 +1,17 @@
+{
+  "name": "foodexpress",
+  "version": "1.0.0",
+  "description": "Mini-Projet : FoodExpress",
+  "main": "main.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/FoodExpress.git"
+  },
+  "keywords": [],
+  "author": "Camille PRADO & Seda YANGIR",
+  "license": "GPL-3.0",
+  "type": "commonjs"
+}

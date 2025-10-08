@@ -4,7 +4,9 @@
   "description": "Mini-Projet : FoodExpress",
   "main": "main.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "dev":"nodemon main.js",
+    "start":"node main.js"
   },
   "repository": {
     "type": "git",
@@ -13,5 +15,18 @@
   "keywords": [],
   "author": "Camille PRADO & Seda YANGIR",
   "license": "GPL-3.0",
-  "type": "commonjs"
+  "type": "commonjs",
+  "devDependencies": {
+    "chai": "^6.2.0",
+    "mocha": "^11.7.4",
+    "mochawesome": "^7.1.4",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.4"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongoose": "^8.19.1",
+    "passport": "^0.7.0",
+    "yup": "^1.7.1"
+  }
 }

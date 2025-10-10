@@ -1,4 +1,5 @@
 # FoodExpress API
+[Contributing on the project](CONTRIBUTING.md)
 ## Structure
 - `/users`
   - User accounts, admins have access.

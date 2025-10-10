@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "test": "mocha",
-    "dev":"nodemon main.js",
-    "start":"node main.js"
+    "dev": "nodemon main.js",
+    "start": "node main.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "express": "^5.1.0",
+    "joi": "^18.0.1",
     "mongoose": "^8.19.1",
     "passport": "^0.7.0",
     "yup": "^1.7.1"

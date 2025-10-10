@@ -1,5 +1,10 @@
 import mongoose from "mongoose"; // Utilisation de Mongoose au lieu de l'API MongoDB, pour des raisons de simplicité
 
+/*-------------------+
+ | Schéma de données |
+ +-------------------*/
+
+
 const UserScheme = new mongoose.Schema({
   id:       { type: Number, required: true}, // À auto-incrémenter
   email:    { type: String, required: true}, // Vérifier avec un REGEX

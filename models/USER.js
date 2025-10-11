@@ -1,17 +1,40 @@
 import mongoose from "mongoose"; // Utilisation de Mongoose au lieu de l'API MongoDB, pour des raisons de simplicité
+import bcrypt from "bcrypt"; // BCrypt pour le chiffrement des
 
 /*-------------------+
  | Schéma de données |
  +-------------------*/
 
+const UserSchema = new mongoose.Schema({
+  email:    { type: String, required: true, unique: true, lowercase: true, trim: true }, // Vérificationa avec JOI
+  username: { type: String, required: true, unique: true, trim: true }, // Vérification avec JOI également
+  password: { type: String, required: true }, // Mot de passe hashé (histoire d'adhérer au RGPD)
+  role:     { type: String, enum: ["user", "admin"], default: "user", required: true }, // Retour au rôle en string, en cas de besoin futur
+}, { timestamps: true });
 
-const UserScheme = new mongoose.Schema({
-  id:       { type: Number, required: true}, // À auto-incrémenter
-  email:    { type: String, required: true}, // Vérifier avec un REGEX
-  username: { type: String, required: true}, // Aussi à vérifier avec un REGEX
-  password: { type: String, required: true}, // Mettre un hash sha256 là-dedans
-  admin:     { type: Boolean, required: false, default: false} // Simplifié pour être un booléen étant donné qu'on a que deux options pour ce champ
-  },
-  { timestamps: true }); // Utile pour débugger et en cas de demandes d'informations
+// Virtual "id" from _id
+UserSchema.virtual("id").get(function () {
+  return this._id.toString();
+});
+UserSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: (_doc, ret) => {
+    delete ret._id;
+    delete ret.password; // au cas où, pour éviter d'éfficher le mdp
+  }
+});
 
-export default mongoose.model("User", UserScheme);
+// Hashage du mdp avant sa sauvegarde dans la DB
+UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
+
+// Vérification du mot de passe (pour les connections)
+UserSchema.methods.checkPassword = function (plain) {
+  return bcrypt.compare(plain, this.password);
+};
+
+export default mongoose.model("User", UserSchema);

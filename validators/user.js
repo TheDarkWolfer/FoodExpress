@@ -9,7 +9,7 @@ exports.userBase = joi.object({
   email: joi.string().email().required(),
   username: joi.string().alphanum().min(3).max(30).required(),
   password: joi.string().min(6).required(),
-  admin: joi.string().valid(['user','admin']).default('user')
+  role: joi.string().valid(['user','admin']).default('user')
 });
 
 // Dérivé du validateur de base pour la création, requiert tous les paramètres

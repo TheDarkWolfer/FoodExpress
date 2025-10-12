@@ -1,8 +1,9 @@
-import express from "express";
-import Users from "../models/USER.js";
-import { userValidator } from "../validators/user.js";
+const express = require("express");
+const Users = require("../models/USER.js")
+const { userUpdate, userCreate } = require("../validators/user.js");
 
 const router = express.Router();
+router.use(express.json());
 
 /*---------+
  | API ici |
@@ -12,7 +13,8 @@ const router = express.Router();
 // Création d'utilisateur.ice (ajouter l'authentification plus tard - admin uniquement)
 router.post("/", async (req, res) => {
   // Validation des données envoyées avant création
-  const { error, value } = userValidator.validate(req.body);
+  console.log(`request body : ${req.body}`)
+  const { error, value } = userCreate.validate(req.body);
   if (error) {
     // En cas d'erreur, on en informe l'utilisateur.ice
     return res.status(400).json({ message: 'Validation error', details: error.details });
@@ -33,7 +35,7 @@ router.get("/:id", async (req, res) => {
 // Mise à jour des données utilisateur.ices, validation des données avec JOI
 router.patch("/:id", async (req, res) => {
   // Validation avec le schéma de mise à jour (champs optionnels)
-  const { error, value } = userValidator.validate(req.body);
+  const { error, value } = userUpdate.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   // Mise à jour dans MongoDB
@@ -52,4 +54,4 @@ router.delete("/:id", async (req, res) => {
     res.status(400).json({ message: "Invalid ID format" });
 });
 
-export default router;
+module.exports = router

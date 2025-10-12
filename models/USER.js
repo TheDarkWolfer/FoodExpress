@@ -1,5 +1,5 @@
-import mongoose from "mongoose"; // Utilisation de Mongoose au lieu de l'API MongoDB, pour des raisons de simplicité
-import bcrypt from "bcrypt"; // BCrypt pour le chiffrement des
+const mongoose = require("mongoose"); // Utilisation de Mongoose au lieu de l'API MongoDB, pour des raisons de simplicité
+const bcrypt = require("bcrypt"); // BCrypt pour le chiffrement des
 
 /*-------------------+
  | Schéma de données |
@@ -37,4 +37,5 @@ UserSchema.methods.checkPassword = function (plain) {
   return bcrypt.compare(plain, this.password);
 };
 
-export default mongoose.model("User", UserSchema);
+// Export du module
+module.exports = mongoose.model("User", UserSchema);

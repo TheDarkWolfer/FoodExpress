@@ -1,6 +1,6 @@
-import mongoose from "mongoose"; // Utilisation de Mongoose au lieu de l'API MongoDB, pour des raisons de simplicité
+const mongoose = require("mongoose"); // Utilisation de Mongoose au lieu de l'API MongoDB, pour des raisons de simplicité
 
-const UserScheme = new mongoose.Schema({
+const RestaurantScheme = new mongoose.Schema({
   id:       { type: Number, required: true}, // À auto-incrémenter
   name:     { type: String, required: true}, // Laissé aux choix des administrateur.ices du restaurant
   address:  { type: String, required: true}, // De même, au choix des admins
@@ -9,4 +9,4 @@ const UserScheme = new mongoose.Schema({
   },
   { timestamps: true }); // Utile pour débugger et en cas de demandes d'informations
 
-export default mongoose.model("User", UserScheme);
+module.exports = mongoose.model("Restaurant",RestaurantScheme);

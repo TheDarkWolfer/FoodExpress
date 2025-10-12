@@ -2,11 +2,11 @@
   "name": "foodexpress",
   "version": "1.0.0",
   "description": "Mini-Projet : FoodExpress",
-  "main": "main.js",
+  "main": "app.js",
   "scripts": {
     "test": "mocha",
     "dev": "nodemon main.js",
-    "start": "node main.js"
+    "start": "node ./bin/www"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,8 @@
     "supertest": "^7.1.4"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "joi": "^18.0.1",
     "mongoose": "^8.19.1",

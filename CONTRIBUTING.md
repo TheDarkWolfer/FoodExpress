@@ -14,13 +14,13 @@ Unit testing can be ran through the command `npm test`
 	- [x] id=>Numerical ID, 
 	- [x] email=string+regex , 
 	- [x] username=string+regex , 
-	- [ ] password=>sha256sum , ***W.I.P.*** <-Camille
+	- [x] password=>sha256sum ,
 	- [x] role=>"user" or "admin"
 - [ ] }
 - [ ] Users can only create/modify/delete their own account
 - [ ] Admins can create/modify/delete any account
 - [ ] Compartmentalization between user's PII
-- [ ] *J*avascript*W*eb*T*okens -> **[jwt](jwt.io)** ***W.I.P.*** <-Camille
+- [ ] *J*avascript*W*eb*T*okens -> **[jwt](jwt.io)** ***W.I.P.*** <-Camille (attribution OK)
 	- [ ] Read on restaurants and menus => No auth
 	- [ ] Stateless auth for write actions
 #### /restaurant

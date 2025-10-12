@@ -8,7 +8,7 @@ Unit testing can be ran through the command `npm test`
 ### This looks hard, but is 100% doable
 ---
 ### Main endpoints : 
-#### /users
+#### /users <-Camille
 - [ ] *CRUD* operations
 - [x] **DATA**{ 
 	- [x] id=>Numerical ID, 
@@ -35,7 +35,7 @@ Unit testing can be ran through the command `npm test`
 - [ ] Admin-only creation, update and deletion
 - [ ] Public read access with optional sorting by name/address
 - [ ] Adjustable pagination limit (default 10, adjusted through query parameters)
-#### /menus
+#### /menus <- Seda
 - [ ] *CRUD* operations
 - [ ] **DATA**{
 	- [ ] id=>Numerical ID,

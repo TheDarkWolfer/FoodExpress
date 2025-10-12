@@ -55,6 +55,11 @@ try {
 
 //app.use("./middleware/auth.js");
 
+if (process.env.NODE_ENV === "development") {
+  console.log("╭─────────────────╮\n│ DEV ENVIRONMENT │\n╰─────────────────╯")
+} else {
+  console.log("╭──────────────────╮\n│ PROD ENVIRONMENT │\n╰──────────────────╯")
+}
 
 app.get("/",(req,res) => {
   return res.status(200).json({message:"It's running :D"});

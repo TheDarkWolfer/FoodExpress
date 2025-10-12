@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "mocha",
-    "dev": "nodemon main.js",
-    "start": "node ./bin/www"
+    "dev": "NODE_ENV=development nodemon ./bin/www",
+    "start": "NODE_ENV=production node ./bin/www"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "joi": "^18.0.1",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.19.1",
     "passport": "^0.7.0",
     "yup": "^1.7.1"

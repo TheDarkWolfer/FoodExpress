@@ -1,4 +1,5 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const Users = require("../models/USER.js")
 const { userUpdate, userCreate } = require("../validators/user.js");
 
@@ -9,11 +10,20 @@ router.use(express.json());
  | API ici |
  +--------*/
 
+// Vite fait : comment voir tous les utilisateur.ices (uniquement fonctionnel dans l'environnement de dév)
+router.get("/",async (req,res) => {
+  if (process.env.NODE_ENV === "development") {
+    const users = await Users.find()
+    return res.status(418).json(users)
+  } else {
+    return res.status(300).json({error:"Not allowed !"})
+  }
+})
+
 
 // Création d'utilisateur.ice (ajouter l'authentification plus tard - admin uniquement)
 router.post("/", async (req, res) => {
   // Validation des données envoyées avant création
-  console.log(`request body : ${req.body}`)
   const { error, value } = userCreate.validate(req.body);
   if (error) {
     // En cas d'erreur, on en informe l'utilisateur.ice
@@ -43,15 +53,50 @@ router.patch("/:id", async (req, res) => {
   if (!user) return res.status(404).json({ message: "User not found" });
 
   res.json(user);
-  res.status(500).json({ message: "Server error", error: err.message });
 });
 
 // Suppression d'utilisateur.ice par ID ; vérification du jeton d'authentification
 router.delete("/:id", async (req, res) => {
+  try {
     const user = await Users.findByIdAndDelete(req.params.id);
     if (!user) return res.status(404).json({ message: "User not found" });
-    res.json({ message: `User ${user.name} deleted successfully` });
-    res.status(400).json({ message: "Invalid ID format" });
+    return res.json({ message: `User ${user.name} deleted successfully` });  
+  } catch(error) {
+    return res.status(400).json({ message: "Invalid ID format" });
+  }
 });
+
+router.post("/login", async (req,res) => {
+  try {
+    const {username, password} = req.body; // Bon, il faut mentionner l'utilité d'un certificat SSL lors du déploiement ^.^
+    if (!username || !password) { 
+      // On s'assure qu'il y a bien les données
+      return res.status(400).json({error:"Username and password required for this action !"})
+      console.log(`U:${username} P:${password}`)
+    }
+
+    const user = await Users.findOne({
+      $or : [{email:username.toLowerCase()},{username:username}]
+    });
+
+    if (!user || await user.checkPassword(password)) {
+      return res.status(401).json({error:"Invalid credentials"})
+    }
+
+    const token = jwt.sign(
+      {sub:user.id,role:user.role}, // ID de l'utilisateur.ice et son rôle, signés avec le secret du JWT
+      process.env.SECRET, // On utilise le secret défini dans .env
+      {expiresIn:process.env.JWT_EXPIRES||"2h"} // Expiration en 2h par défaut, sinon comme configuré dans le .env
+    )
+    return res.status(202).json({
+      token,
+      user: { id: user.id, email: user.email, username: user.username, role: user.role }
+    });
+
+  } catch(error) {
+    res.status(500).json({error:"Something went wrong with the server, please send emotional support Monster Munches"})
+    console.error(error)
+  }
+})
 
 module.exports = router

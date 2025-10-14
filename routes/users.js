@@ -3,6 +3,10 @@ const jwt = require("jsonwebtoken");
 const Users = require("../models/USER.js")
 const { userUpdate, userCreate } = require("../validators/user.js");
 
+// Middleware pour l'authentification
+//const auth = require("./middleware/auth");
+const { requireAuth, requireRole } = require("../middleware/auth");
+
 const router = express.Router();
 router.use(express.json());
 
@@ -22,7 +26,7 @@ router.get("/",async (req,res) => {
 
 
 // Création d'utilisateur.ice (ajouter l'authentification plus tard - admin uniquement)
-router.post("/", async (req, res) => {
+router.post("/",  requireAuth, async (req, res) => {
   // Validation des données envoyées avant création
   const { error, value } = userCreate.validate(req.body);
   if (error) {
@@ -36,14 +40,14 @@ router.post("/", async (req, res) => {
 });
 
 // Lecture d'un.e utilisateur.ices (ajouter l'authentification plus tard)
-router.get("/:id", async (req, res) => {
+router.get("/:id", requireAuth, async (req, res) => {
   const user = await Users.findById(req.params.id);
   if (!user) return res.status(404).json({ message: "user not found" });
   res.json(user);
 });
 
 // Mise à jour des données utilisateur.ices, validation des données avec JOI
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", requireAuth, async (req, res) => {
   // Validation avec le schéma de mise à jour (champs optionnels)
   const { error, value } = userUpdate.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
@@ -56,7 +60,7 @@ router.patch("/:id", async (req, res) => {
 });
 
 // Suppression d'utilisateur.ice par ID ; vérification du jeton d'authentification
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", requireAuth, async (req, res) => {
   try {
     const user = await Users.findByIdAndDelete(req.params.id);
     if (!user) return res.status(404).json({ message: "User not found" });

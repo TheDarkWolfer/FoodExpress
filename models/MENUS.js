@@ -9,4 +9,4 @@ const MenuScheme = new mongoose.Schema({
   category:       { type: String, requried: true}, // Ah et tout ça n'est modifiable que par les admins des restaurants
 },{ timestamps: true }); // Utile pour débugger et en cas de demandes d'informations
 
-module.exports = mongoose.model("MenuScheme",MenuScheme);
+module.exports = mongoose.model("Menus",MenuScheme);

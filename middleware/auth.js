@@ -2,10 +2,11 @@
 const { verifyToken } = require('../utils/jwt');
 
 // S'assure que le client est authentifié
-function authRequired(req, res, next) {
-  const header = req.headers.authorization || '';
-  const [scheme, token] = header.split(' ');
-  if (scheme !== 'Bearer' || !token) {
+function requireAuth(req, res, next) {
+  const header = req.headers.authorization || ''; // Récupération du token dans les en-têtes
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+  if (!token) {
+
     return res.status(401).json({ error: 'Missing or invalid Authorization header' });
   }
 
@@ -28,4 +29,4 @@ function requireRole(...roles) {
   };
 }
 
-module.exports = { authRequired, requireRole };
+module.exports = { requireAuth, requireRole };

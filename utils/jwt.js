@@ -1,4 +1,7 @@
+const dotenv = require("dotenv");
 const jwt = require('jsonwebtoken');
+
+dotenv.config()
 
 const SECRET = process.env.SECRET || "pleasechangeme";
 const EXPIRES_IN = process.env.SECRET_EXPIRE || '1h';

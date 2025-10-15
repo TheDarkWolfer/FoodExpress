@@ -9,7 +9,7 @@ Unit testing can be ran through the command `npm test`
 ---
 ### Main endpoints : 
 #### /users <-Camille
-- [ ] *CRUD* operations
+- [x] *CRUD* operations
 - [x] **DATA**{ 
 	- [x] id=>Numerical ID, 
 	- [x] email=string+regex , 
@@ -48,3 +48,8 @@ Unit testing can be ran through the command `npm test`
 - [ ] Admin-only creation, update and deletion
 - [ ] Public read access with optional sorting by price/category
 - [ ] Adjustable pagination limit (default 10, adjusted through query parameters)
+
+### Other :
+- [ ] Documentation using swagger/openapi
+- [ ] Testing with mocha
+- [ ] Powerpoint

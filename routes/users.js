@@ -15,7 +15,7 @@ router.use(express.json());
  +--------*/
 
 // Vite fait : comment voir tous les utilisateur.ices (uniquement fonctionnel dans l'environnement de dév)
-router.get("/",async (req,res) => {
+router.get("/",async (req,res,next) => {
   if (process.env.NODE_ENV === "development") {
     const users = await Users.find()
     return res.status(418).json(users)
@@ -47,7 +47,7 @@ router.get("/:id", requireAuth, async (req, res) => {
 });
 
 // Mise à jour des données utilisateur.ices, validation des données avec JOI
-router.patch("/:id", requireAuth, async (req, res) => {
+router.patch("/:id", requireAuth, async (req, res,next) => {
   // Validation avec le schéma de mise à jour (champs optionnels)
   const { error, value } = userUpdate.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
@@ -60,7 +60,7 @@ router.patch("/:id", requireAuth, async (req, res) => {
 });
 
 // Suppression d'utilisateur.ice par ID ; vérification du jeton d'authentification
-router.delete("/:id", requireAuth, async (req, res) => {
+router.delete("/:id", requireAuth, async (req, res,next) => {
   try {
     const user = await Users.findByIdAndDelete(req.params.id);
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -70,7 +70,7 @@ router.delete("/:id", requireAuth, async (req, res) => {
   }
 });
 
-router.post("/login", async (req,res) => {
+router.post("/login", async (req,res,next) => {
   try {
     const {username, password} = req.body; // Bon, il faut mentionner l'utilité d'un certificat SSL lors du déploiement ^.^
     if (!username || !password) { 

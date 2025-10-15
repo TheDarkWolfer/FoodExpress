@@ -47,7 +47,7 @@ router.get("/:id", requireAuth, async (req, res) => {
 });
 
 // Mise à jour des données utilisateur.ices, validation des données avec JOI
-router.patch("/:id", requireAuth, async (req, res,next) => {
+router.patch("/:id", requireAuth, async (req, res) => {
   // Validation avec le schéma de mise à jour (champs optionnels)
   const { error, value } = userUpdate.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
@@ -60,7 +60,7 @@ router.patch("/:id", requireAuth, async (req, res,next) => {
 });
 
 // Suppression d'utilisateur.ice par ID ; vérification du jeton d'authentification
-router.delete("/:id", requireAuth, async (req, res,next) => {
+router.delete("/:id", requireAuth, async (req, res) => {
   try {
     const user = await Users.findByIdAndDelete(req.params.id);
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -82,8 +82,10 @@ router.post("/login", async (req,res,next) => {
     const user = await Users.findOne({
       $or : [{email:username.toLowerCase()},{username:username}]
     });
-
-    if (!user || await user.checkPassword(password)) {
+    
+    // Fun fact : si on fait cette vérification de manière asynchrone, le programme
+    // renvoie un token *valide* même si le mot de passe est incorrect ! Qui l'eut crû !
+    if (!user || user.checkPassword(password)) { 
       return res.status(401).json({error:"Invalid credentials"})
     }
 

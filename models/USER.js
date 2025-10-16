@@ -33,8 +33,10 @@ UserSchema.pre("save", async function (next) {
 });
 
 // Vérification du mot de passe (pour les connections)
-UserSchema.methods.checkPassword = function (plain) {
-  return bcrypt.compare(plain, this.password);
+UserSchema.methods.checkPassword = async function (plain) {
+  const attempt = await bcrypt.hash(plain,12)
+  const result = await bcrypt.compare(plain, this.password)
+  return result;
 };
 
 // Export du module

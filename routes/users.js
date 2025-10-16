@@ -26,7 +26,7 @@ router.get("/",async (req,res,next) => {
 
 
 // Création d'utilisateur.ice (ajouter l'authentification plus tard - admin uniquement)
-router.post("/",  requireAuth, async (req, res) => {
+router.post("/",  async (req, res) => {
   // Validation des données envoyées avant création
   const { error, value } = userCreate.validate(req.body);
   if (error) {
@@ -76,8 +76,9 @@ router.post("/login", async (req,res,next) => {
     if (!username || !password) { 
       // On s'assure qu'il y a bien les données
       return res.status(400).json({error:"Username and password required for this action !"})
-      console.log(`U:${username} P:${password}`)
     }
+
+    console.log(`U:>${username}< P:>${password}<`)
 
     const user = await Users.findOne({
       $or : [{email:username.toLowerCase()},{username:username}]
@@ -85,9 +86,10 @@ router.post("/login", async (req,res,next) => {
     
     // Fun fact : si on fait cette vérification de manière asynchrone, le programme
     // renvoie un token *valide* même si le mot de passe est incorrect ! Qui l'eut crû !
-    if (!user || user.checkPassword(password)) { 
-      return res.status(401).json({error:"Invalid credentials"})
-    }
+    if (!user) return res.status(401).json({ error: "Invalid credentials" });
+
+    const ok = await user.checkPassword(password);   // ← AWAIT it
+    if (!ok) return res.status(401).json({ error: "Invalid credentials" });
 
     const token = jwt.sign(
       {sub:user.id,role:user.role}, // ID de l'utilisateur.ice et son rôle, signés avec le secret du JWT

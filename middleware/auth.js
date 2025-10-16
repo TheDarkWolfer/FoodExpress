@@ -22,10 +22,10 @@ function requireAuth(req, res, next) {
       userId: String(decoded.sub),
       role: decoded.role || 'user',
     };
-    console.log("Decoding token...")
+    //console.log("Decoding token...") // Gardé en commentaire pour faciliter tout débuggage futur
     req.user = decoded;
-    console.log(`->${req.auth.userId}<->${req.auth.role}`)
-    console.log(`${decoded} for ${req.user}- Proceed.`)
+    //console.log(`->${req.auth.userId}<->${req.auth.role}`)
+    //console.log(`${decoded} for ${req.user}- Proceed.`)
     return next();
   } catch (e) {
     console.error(e)
@@ -45,7 +45,8 @@ function allowSelfOrAdmin(req, res, next) {
     const decoded = jwt.verify(token, process.env.SECRET)
     req.user = decoded
    } catch(e) {
-    console.error("fuck")
+    console.error(e)
+    return res.status(401).json({error:"Missing Authorization header"});
    }
 };
 

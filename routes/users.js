@@ -1,7 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const Users = require("../models/USER.js")
-const { userUpdate, userCreate } = require("../validators/user.js");
+const { userUpdate, userCreate } = require("../validators/users-validator.js");
 
 // Middleware pour l'authentification
 //const auth = require("./middleware/auth");

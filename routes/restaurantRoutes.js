@@ -106,7 +106,7 @@ export const deleteRestaurants = async (req, res) => {
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const Restaurants = require("../models/Restaurants.js")
-const { ResataurantsUpdate, RestaurantsCreate } = require("../validators/Restaurants.js");
+const { RestaurantsCreate, RestaurantsUpdate } = require("../validators/restaurants-validator.js");
 
 // Middleware 
 //const auth = require("./middleware/auth");
@@ -122,8 +122,8 @@ router.use(express.json());
 // Vite fait : comment voir tous les restaurants
 router.get("/",async (req,res) => {
   if (process.env.NODE_ENV === "development") {
-    const Restaurants = await Restaurants.find()
-    return res.status(418).json(Restaurants)
+    const _Restaurant = await Restaurants.find()
+    return res.status(418).json(_Restaurant)
   } else {
     return res.status(300).json({error:"Not allowed !"})
   }
@@ -133,6 +133,10 @@ router.get("/",async (req,res) => {
 // Création de restaurant 
 router.post("/",  requireAuth, async (req, res) => {
   // Validation des données envoyées avant création
+  if (!req.body) { 
+    return res.status(418).json({error:"Missing request body !"})
+  }
+  
   const { error, value } = RestaurantsCreate.validate(req.body);
   if (error) {
     // En cas d'erreur, on en informe l'utilisateur.ice
@@ -140,15 +144,15 @@ router.post("/",  requireAuth, async (req, res) => {
   }
 
   // Création d'un nouveau resataurant dans la DB
-  const Restaurants = await Restaurants.create(value);
-  res.status(201).json(Restaurants);
+  const newRestaurants = await Restaurants.create(value);
+  res.status(201).json(newRestaurants);
 });
 
 // Lecture d'un restaurant 
 router.get("/:id", requireAuth, async (req, res) => {
-  const Restaurants = await Restaurants.findById(req.params.id);
-  if (!Restaurants) return res.status(404).json({ message: "user not found" });
-  res.json(Restaurants);
+  const _Restaurant = await Restaurants.findById(req.params.id);
+  if (!_Restaurant) return res.status(404).json({ message: "Restaurant not found" });
+  res.json(_Restaurant);
 });
 
 // Mise à jour des données restaurants, validation des données avec JOI
@@ -158,8 +162,8 @@ router.patch("/:id", requireAuth, async (req, res) => {
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   // Mise à jour dans MongoDB
-  const Restaurants = await Restaurants.findByIdAndUpdate(req.params.id, value, { new: true });
-  if (!Restaurants) return res.status(404).json({ message: "User not found" });
+  const _Restaurant = await Restaurants.findByIdAndUpdate(req.params.id, value, { new: true });
+  if (!_Restaurant) return res.status(404).json({ message: "Restaurant not found" });
 
   res.json(Restaurants);
 });
@@ -167,9 +171,9 @@ router.patch("/:id", requireAuth, async (req, res) => {
 // Suppression de resaturant par ID 
 router.delete("/:id", requireAuth, async (req, res) => {
   try {
-    const Restaurants = await Restaurants.findByIdAndDelete(req.params.id);
-    if (!Restaurants) return res.status(404).json({ message: "User not found" });
-    return res.json({ message: `User ${Restaurants.name} deleted successfully` });  
+    const _Restaurant = await Restaurants.findByIdAndDelete(req.params.id);
+    if (!_Restaurant) return res.status(404).json({ message: "User not found" });
+    return res.json({ message: `User ${_Restaurant.name} deleted successfully` });  
   } catch(error) {
     return res.status(400).json({ message: "Invalid ID format" });
   }

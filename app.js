@@ -14,7 +14,7 @@ app.use(express.json());
  +--------------------*/
 
 const Users = require("./models/USER");
-const Restaurants = require("./models/RESTAURANT");
+const Restaurants = require("./models/Restaurants.js");
 const Menus = require("./models/MENUS");
 
 /*----------+
@@ -28,17 +28,17 @@ try {
 } catch(error) {
   console.log(`Error when loading user router !\n-------\n${error}`)
 }
-/*
+
 try {
-  const restaurantRouter = require("./routes/restaurant.js");
+  const restaurantRouter = require("./routes/restaurantRoutes.js");
   app.use("/restaurant",restaurantRouter);
   console.log(`Restaurant router loaded successfully !`)
 } catch(error) {
   console.log(`Error when loading restaurant router !\n-------\n${error}`)
 }
-
+/*
 try {
-  const menuRouter = require("./routes/menus.js");
+  const menuRouter = require("./routes/menusRoutes.js");
   app.use("/menu",menuRouter);
   console.log(`Menu router loaded successfully !`)
 } catch(error) {

@@ -1,5 +1,4 @@
-// models/restaurantModels.js
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const RestaurantSchema = new mongoose.Schema({
   id: { type: String, required: true },
@@ -9,4 +8,4 @@ const RestaurantSchema = new mongoose.Schema({
   opening_hours: { type: String, required: true },
 });
 
-export default mongoose.model("Menu", menuSchema);
+module.exports = mongoose.model("Restaurant", RestaurantSchema);

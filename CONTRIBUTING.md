@@ -24,14 +24,14 @@ Unit testing can be ran through the command `npm test`
 	- [ ] Read on restaurants and menus => No auth
 	- [ ] Stateless auth for write actions
 #### /restaurant
-- [ ] *CRUD* operations
-- [ ] **DATA**{
-	- [ ] id=>Numerical ID,
-	- [ ] name=>string+regex,
-	- [ ] address=>string+regex,(potential map validation too),
-	- [ ] phone=>integers+regex,(potential more precise regex match),
-	- [ ] opening hours=>json,
-- [ ] }[[3API - DB]]
+- [x] *CRUD* operations
+- [x] **DATA**{
+	- [x] id=>Numerical ID,
+	- [x] name=>string+regex,
+	- [x] address=>string+regex,(potential map validation too),
+	- [x] phone=>integers+regex,(potential more precise regex match),
+	- [x] opening hours=>json,
+- [x] }[[3API - DB]]
 - [ ] Admin-only creation, update and deletion
 - [ ] Public read access with optional sorting by name/address
 - [ ] Adjustable pagination limit (default 10, adjusted through query parameters)

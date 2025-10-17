@@ -6,7 +6,9 @@
   "scripts": {
     "test": "mocha",
     "dev": "NODE_ENV=development nodemon ./bin/www",
-    "start": "NODE_ENV=production node ./bin/www"
+    "start": "NODE_ENV=production node ./bin/www",
+    "w-start":"set NODE_ENV=development && nodemon ./bin/www",
+    "w-dev":"set NODE_ENV=production && node ./bin/www"
   },
   "repository": {
     "type": "git",

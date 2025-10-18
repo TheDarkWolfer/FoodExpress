@@ -1,6 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const Users = require("../models/USER.js")
+const bcrypt = require("bcrypt")
 const { userUpdate, userCreate } = require("../validators/users-validator.js");
 
 // Middleware pour l'authentification
@@ -51,6 +52,12 @@ router.patch("/:id", requireAuth, async (req, res) => {
   // Validation avec le schéma de mise à jour (champs optionnels)
   const { error, value } = userUpdate.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
+
+
+  // Fix pour l'Issue #1 : hashage non appliqué en cas de PATCH
+  if (req.body.password) {
+    req.body.password = await bcrypt.hash(req.body.password,12)
+  }
 
   // Mise à jour dans MongoDB
   const user = await Users.findByIdAndUpdate(req.params.id, value, { new: true });

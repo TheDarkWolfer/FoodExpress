@@ -161,6 +161,8 @@ router.patch("/:id", requireAuth, async (req, res) => {
   const { error, value } = RestaurantsUpdate.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
+  console.log(`Attempted PATCH to change ${req.body}`)
+
   // Mise à jour dans MongoDB
   const _Restaurant = await Restaurants.findByIdAndUpdate(req.params.id, value, { new: true });
   if (!_Restaurant) return res.status(404).json({ message: "Restaurant not found" });

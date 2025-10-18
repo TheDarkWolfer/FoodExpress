@@ -49,14 +49,13 @@ router.get("/:id", requireAuth, async (req, res) => {
 
 // Mise à jour des données utilisateur.ices, validation des données avec JOI
 router.patch("/:id", requireAuth, async (req, res) => {
-  // Validation avec le schéma de mise à jour (champs optionnels)
-  const { error, value } = userUpdate.validate(req.body);
-
   // Fix pour l'Issue #1 : hashage non appliqué en cas de PATCH
   if (req.body.password) {
     req.body.password = await bcrypt.hash(req.body.password,12)
   }
 
+  // Validation avec le schéma de mise à jour (champs optionnels)
+  const { error, value } = userUpdate.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   // Mise à jour dans MongoDB

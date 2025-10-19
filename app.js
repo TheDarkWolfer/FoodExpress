@@ -14,7 +14,7 @@ app.use(express.json());
  +--------------------*/
 
 const Users = require("./models/USER");
-const Restaurants = require("./models/Restaurants.js");
+const Restaurants = require("./models/RESTAURANTS");
 const Menus = require("./models/MENUS");
 
 /*----------+

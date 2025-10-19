@@ -1,6 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const Restaurants = require("../models/Restaurants.js")
+const Restaurants = require("../models/RESTAURANTS.js")
 const { RestaurantsCreate, RestaurantsUpdate } = require("../validators/restaurants-validator.js");
 
 // Middleware 

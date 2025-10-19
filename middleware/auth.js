@@ -14,8 +14,6 @@ function requireAuth(req, res, next) {
     return res.status(401).json({ error: 'Missing or invalid Authorization header' });
   }
 
-  console.log(`Attempting to read ${token} with ${process.env.SECRET}`)
-
   try {
     const decoded = jwt.verify(token, process.env.SECRET);
     req.auth = {

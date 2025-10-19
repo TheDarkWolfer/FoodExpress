@@ -26,7 +26,7 @@ try {
   app.use("/users",userRouter);
   console.log(`User router loaded successfully !`)
 } catch(error) {
-  console.log(`Error when loading user router !\n-------\n${error}`)
+  console.error(`Error when loading user router !\n-------\n${error}`)
 }
 
 try {
@@ -34,7 +34,7 @@ try {
   app.use("/restaurant",restaurantRouter);
   console.log(`Restaurant router loaded successfully !`)
 } catch(error) {
-  console.log(`Error when loading restaurant router !\n-------\n${error}`)
+  console.error(`Error when loading restaurant router !\n-------\n${error}`)
 }
 /*
 try {
@@ -42,7 +42,7 @@ try {
   app.use("/menu",menuRouter);
   console.log(`Menu router loaded successfully !`)
 } catch(error) {
-  console.log(`Error when loading menu router !\n-------\n${error}`)
+  console.error(`Error when loading menu router !\n-------\n${error}`)
 }
 */
 

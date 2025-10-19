@@ -84,8 +84,6 @@ router.post("/login", async (req,res,next) => {
       return res.status(400).json({error:"Username and password required for this action !"})
     }
 
-    console.log(`U:>${username}< P:>${password}<`)
-
     const user = await Users.findOne({
       $or : [{email:username.toLowerCase()},{username:username}]
     });

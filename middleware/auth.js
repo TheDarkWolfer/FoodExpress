@@ -19,17 +19,20 @@ function requireAuth(req, res, next) {
   try {
     const decoded = jwt.verify(token, process.env.SECRET);
     req.auth = {
+      username: String(decoded.username),
       userId: String(decoded.sub),
       role: decoded.role || 'user',
     };
     //console.log("Decoding token...") // Gardé en commentaire pour faciliter tout débuggage futur
     req.user = decoded;
-    //console.log(`->${req.auth.userId}<->${req.auth.role}`)
-    //console.log(`${decoded} for ${req.user}- Proceed.`)
-    return next();
+    if ((req.auth.userId == req.params.id) || (req.auth.role == "admin")) {
+      return next();
+    } else {
+      return res.status(401).json({error:"Access forbidden to this ID"})
+    }
   } catch (e) {
     console.error(e)
-    return res.status(401).json({ error: 'Bad token' });
+    return res.status(400).json({ error: "Please don't break our API '~'" });
   }
 }
 

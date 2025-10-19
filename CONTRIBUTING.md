@@ -17,12 +17,12 @@ Unit testing can be ran through the command `npm test`
 	- [x] password=>sha256sum ,
 	- [x] role=>"user" or "admin"
 - [x] }
-- [ ] Users can only create/modify/delete their own account
-- [ ] Admins can create/modify/delete any account
-- [ ] Compartmentalization between user's PII
+- [ ] Users can only create/modify/delete their own account ***W.I.P.*** <-Camille
+- [ ] Admins can create/modify/delete any account ***W.I.P.*** <-Camille
+- [ ] Compartmentalization between user's PII ***W.I.P.*** <-Camille
 - [ ] *J*avascript*W*eb*T*okens -> **[jwt](jwt.io)** ***W.I.P.*** <-Camille (attribution OK)
-	- [ ] Read on restaurants and menus => No auth
-	- [ ] Stateless auth for write actions
+	- [ ] Read on restaurants and menus => No auth ***W.I.P.*** <-Camille
+	- [ ] Stateless auth for write actions ***W.I.P.*** <-Camille
 #### /restaurant
 - [x] *CRUD* operations
 - [x] **DATA**{
@@ -32,7 +32,7 @@ Unit testing can be ran through the command `npm test`
 	- [x] phone=>integers+regex,(potential more precise regex match),
 	- [x] opening hours=>json,
 - [x] }[[3API - DB]]
-- [ ] Admin-only creation, update and deletion
+- [ ] Admin-only creation, update and deletion ***W.I.P.*** <-Camille
 - [ ] Public read access with optional sorting by name/address
 - [ ] Adjustable pagination limit (default 10, adjusted through query parameters)
 #### /menus <- Seda

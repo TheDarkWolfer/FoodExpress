@@ -10,10 +10,9 @@ Unit testing can be ran through the command `npm test`
 ### Main endpoints : 
 #### /users <-Camille
 - [x] *CRUD* operations
-- [x] **DATA**{ 
-	- [x] id=>Numerical ID, 
-	- [x] email=string+regex , 
-	- [x] username=string+regex , 
+- [x] **DATA**{
+	- [x] email=string, 
+	- [x] username=string, 
 	- [x] password=>sha256sum ,
 	- [x] role=>"user" or "admin"
 - [x] }
@@ -26,27 +25,24 @@ Unit testing can be ran through the command `npm test`
 #### /restaurant
 - [x] *CRUD* operations
 - [x] **DATA**{
-	- [x] id=>Numerical ID,
-	- [x] name=>string+regex,
-	- [x] address=>string+regex,(potential map validation too),
-	- [x] phone=>integers+regex,(potential more precise regex match),
+	- [x] name=>string,
+	- [x] address=>string
+	- [x] phone=>integers
 	- [x] opening hours=>json,
 - [x] }[[3API - DB]]
-- [ ] Admin-only creation, update and deletion ***W.I.P.*** <-Camille
+- [x] Admin-only creation, update and deletion ***W.I.P.*** <-Camille
 - [ ] Public read access with optional sorting by name/address
 - [ ] Adjustable pagination limit (default 10, adjusted through query parameters)
 #### /menus <- Seda
-- [ ] *CRUD* operations
-- [ ] **DATA**{
-	- [ ] id=>Numerical ID,
-	- [ ] restaurant_id=>Numerical ID+validation,
-	- [ ] name=>string+regex,
-	- [ ] description=>string+max size,
-	- [ ] price=>float,
-	- [ ] category=>string+regex,
-- [ ] }
-- [ ] Admin-only creation, update and deletion
-- [ ] Public read access with optional sorting by price/category
+- [x] *CRUD* operations
+- [x] **DATA**{
+	- [x] name=>string
+	- [x] description=>string,
+	- [x] price=>float,
+	- [x] category=>string,
+- [x] }
+- [x] Admin-only creation, update and deletion
+- [x] Public read access with optional sorting by price/category
 - [ ] Adjustable pagination limit (default 10, adjusted through query parameters)
 
 ### Other :

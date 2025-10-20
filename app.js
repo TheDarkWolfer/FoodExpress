@@ -9,14 +9,6 @@ const app = express();
  +-------------*/
 app.use(express.json());
 
-/*--------------------+
- | Modèles de données |
- +--------------------*/
-
-const Users = require("./models/USER");
-const Restaurants = require("./models/RESTAURANTS");
-const Menus = require("./models/MENUS");
-
 /*----------+
  | Routeurs |
  +----------*/
@@ -36,7 +28,7 @@ try {
 } catch(error) {
   console.error(`Error when loading restaurant router !\n-------\n${error}`)
 }
-/*
+
 try {
   const menuRouter = require("./routes/menusRoutes.js");
   app.use("/menu",menuRouter);
@@ -44,7 +36,6 @@ try {
 } catch(error) {
   console.error(`Error when loading menu router !\n-------\n${error}`)
 }
-*/
 
 // Ajouter la connection à la DB plus tard
 try {

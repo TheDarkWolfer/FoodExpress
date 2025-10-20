@@ -17,10 +17,10 @@ Unit testing can be ran through the command `npm test`
 	- [x] password=>sha256sum ,
 	- [x] role=>"user" or "admin"
 - [x] }
-- [ ] Users can only create/modify/delete their own account ***W.I.P.*** <-Camille
-- [ ] Admins can create/modify/delete any account ***W.I.P.*** <-Camille
-- [ ] Compartmentalization between user's PII ***W.I.P.*** <-Camille
-- [ ] *J*avascript*W*eb*T*okens -> **[jwt](jwt.io)** ***W.I.P.*** <-Camille (attribution OK)
+- [x] Users can only create/modify/delete their own account <-Camille
+- [x] Admins can create/modify/delete any account <-Camille
+- [x] Compartmentalization between user's PII <-Camille
+- [x] *J*avascript*W*eb*T*okens -> **[jwt](jwt.io)** <-Camille
 	- [ ] Read on restaurants and menus => No auth ***W.I.P.*** <-Camille
 	- [ ] Stateless auth for write actions ***W.I.P.*** <-Camille
 #### /restaurant

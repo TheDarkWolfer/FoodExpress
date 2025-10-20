@@ -13,8 +13,8 @@ router.use(express.json());
 // voir les Menus
 router.get("/",async (req,res) => {
   if (process.env.NODE_ENV === "development") {
-    const Menus = await Menus.find()
-    return res.status(418).json(Menus)
+    const menus = await Menus.find()
+    return res.status(418).json(menus)
   } else {
     return res.status(300).json({error:"Not allowed !"})
   }
@@ -49,7 +49,7 @@ router.patch("/:id", requireAuth, async (req, res) => {
 
   
   const _Menus = await Menus.findByIdAndUpdate(req.params.id, value, { new: true });
-  if (!_Menus) return res.status(404).json({ message: "User not found" });
+  if (!_Menus) return res.status(404).json({ message: "Menu not found" });
 
   res.json(_Menus);
 });
@@ -58,8 +58,8 @@ router.patch("/:id", requireAuth, async (req, res) => {
 router.delete("/:id", requireAuth, async (req, res) => {
   try {
     const _Menus = await Menus.findByIdAndDelete(req.params.id);
-    if (!_Menus) return res.status(404).json({ message: "User not found" });
-    return res.json({ message: `User ${_Menus.name} deleted successfully` });  
+    if (!_Menus) return res.status(404).json({ message: "Menu not found" });
+    return res.json({ message: `Menu '${_Menus.name}' deleted successfully` });  
   } catch(error) {
     return res.status(400).json({ message: "Invalid ID format" });
   }

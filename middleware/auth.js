@@ -52,7 +52,7 @@ function allowSelfOrAdmin(req, res, next) {
 };
 
 // Vérification par rôle ; permet la scission entre les utilisateur.ices et les administrateur.ices
-function requireRole(req,res,next) {
+function requireRole(req,res,next,desiredRole) {
   const header = req.headers.authorization || ''
   const token = header.startsWith('Bearer ') ? header.slice(7) : null;
   if (!token) {

@@ -1,7 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const Menus = require("../models/MENUS.js")
-const { MenusCreate, MenusUpdate } = require("../validators/menus-validator.js");
+const { MenusUpdate, MenusCreate } = require("../validators/menus-validator.js");
 
 // Middleware
 //const auth = require("./middleware/auth");
@@ -13,37 +13,12 @@ router.use(express.json());
 // voir les Menus
 router.get("/",async (req,res) => {
   if (process.env.NODE_ENV === "development") {
-    try {
-      // Extraction des paramètres de requête avec valeurs par défaut
-      const { search = "", sortBy = "name", order = "asc", limit = 10, page = 1 } = req.query;
-
-      // Création de l'expression régulière pour la recherche
-      const searchRegex = new RegExp(search, "i");
-      const filter = {
-        $or: [
-          { name: { $regex: searchRegex } },
-          { price: { $regex: searchRegex } },
-          { category: { $regex: searchRegex } }
-        ]
-      };
-      // Détermination de l’ordre de tri (ascendant ou descendant)
-      const sortOrder = order === "desc" ? -1 : 1;
-
-      // Pagination
-      const skip = (parseInt(page) - 1) * parseInt(limit);
-
-      // Requête avec filtre, tri et pagination
-      const menus = await Menus.find(filter)
-        .sort({ [sortBy]: sortOrder })
-        .skip(skip)
-        .limit(parseInt(limit));
-    return res.status(418).json(menus)
-  } catch {
+    const Menus = await Menus.find()
+    return res.status(418).json(Menus)
+  } else {
     return res.status(300).json({error:"Not allowed !"})
   }
-}
 })
-
 
 
 // Création de Menus
@@ -54,7 +29,6 @@ router.post("/",  requireAuth, async (req, res) => {
     // En cas d'erreur, on en informe l'utilisateur.ice
     return res.status(400).json({ message: 'Validation error', details: error.details });
   }
-
  
   const menu = await Menus.create(value);
   res.status(201).json(menu);
@@ -68,7 +42,7 @@ router.get("/:id", requireAuth, async (req, res) => {
 });
 
 // MAJ de menus, validation des données avec JOI
-router.patch("/:id", requireAuth,  requireRole("admin"), async (req, res) => {
+router.patch("/:id", requireAuth, async (req, res) => {
   // Validation avec le schéma de mise à jour (champs optionnels)
   const { error, value } = MenusUpdate.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
@@ -81,7 +55,7 @@ router.patch("/:id", requireAuth,  requireRole("admin"), async (req, res) => {
 });
 
 // Suppression  Menus
-router.delete("/:id", requireAuth,  requireRole("admin"), async (req, res) => {
+router.delete("/:id", requireAuth, async (req, res) => {
   try {
     const _Menus = await Menus.findByIdAndDelete(req.params.id);
     if (!_Menus) return res.status(404).json({ message: "User not found" });

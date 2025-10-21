@@ -36,15 +36,20 @@ router.post("/",  async (req, res) => {
   }
 
   // Création d'un.e nouvel.le utilisateur.ice dans la DB
-  const user = await Users.create(value);
-  res.status(201).json(user);
+  try {
+    const user = await Users.create(value);
+    return res.status(201).json(user);
+  } catch(error) {
+    console.error(`${error}`)
+    return res.status(409).json({message:'Conflicting registration request and database entry'})
+  }
 });
 
 // Lecture d'un.e utilisateur.ices (ajouter l'authentification plus tard)
 router.get("/:id", requireAuth, async (req, res) => {
   const user = await Users.findById(req.params.id);
   if (!user) return res.status(404).json({ message: "user not found" });
-  res.json(user);
+  return res.status(200).json(user);
 });
 
 // Mise à jour des données utilisateur.ices, validation des données avec JOI
@@ -62,7 +67,7 @@ router.patch("/:id", requireAuth, async (req, res) => {
   const user = await Users.findByIdAndUpdate(req.params.id, value, { new: true });
   if (!user) return res.status(404).json({ message: "User not found" });
 
-  res.json(user);
+  return res.status(200).json(user);
 });
 
 // Suppression d'utilisateur.ice par ID ; vérification du jeton d'authentification
@@ -100,14 +105,14 @@ router.post("/login", async (req,res,next) => {
       process.env.SECRET, // On utilise le secret défini dans .env
       {expiresIn:process.env.JWT_EXPIRES||"2h"} // Expiration en 2h par défaut, sinon comme configuré dans le .env
     )
-    return res.status(202).json({
+    return res.status(200).json({
       token,
       user: { id: user.id, email: user.email, username: user.username, role: user.role }
     });
 
   } catch(error) {
-    res.status(500).json({error:"Something went wrong with the server, please send emotional support Monster Munches"})
     console.error(error)
+    return res.status(500).json({error:"Something went wrong with the server, please send emotional support Monster Munches"})
   }
 })
 

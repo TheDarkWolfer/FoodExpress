@@ -1,1 +1,0 @@
-DEBUG=foodexpress:* npm start

@@ -14,7 +14,7 @@ app.use(express.json());
  +----------*/
 
 try {
-  const userRouter = require("./routes/users.js");
+  const userRouter = require("./routes/usersRoutes.js");
   app.use("/users",userRouter);
   console.log(`User router loaded successfully !`)
 } catch(error) {

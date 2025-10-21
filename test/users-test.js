@@ -6,9 +6,13 @@ const jwt = require("jsonwebtoken");
 
 const app = require("../app.js")
 
-describe("MENU router",() => {
+describe("USER router",() => {
+  // On gardera une liste des utilisateur.ices créé.es pour faciliter le nettoyage après les tests (vaut mieux éviter de chambouler la base de données entre chaque tests ;)
+  let usersIDs = []
   let userToken
   let adminToken
+  let rawAdminToken
+  let rawUserToken
   it("GET /users",async () => {
     await supertest(app)
     .get("/users")
@@ -16,6 +20,7 @@ describe("MENU router",() => {
     .then((response)=>{
       assert.equal(typeof(response.body),'object')
     })
+
   })
   it("POST /users -> création d'un utilisateur lambda",async () => {
     const userBody = await supertest(app)
@@ -26,6 +31,18 @@ describe("MENU router",() => {
       password:"test1234",
       role:"user"
     }).expect(201).expect("Content-type",/json/)
+    usersIDs.push(userBody.id)
+  })
+  it("POST /users -> création d'un.e utilisateur.ice déjà présent.e dans la base de données",async()=>{
+    const duplicateBody = await supertest(app)
+    .post("/users")
+    .send({
+      email:"lambda@xyz.org",
+      username:"lambda",
+      password:"qwerty",
+      role:"user"
+    }).expect(409)
+    usersIDs.push(duplicateBody.id)
   })
   it("POST /users -> création d'utilisateur admin",async () => {
     const userAdmin = await supertest(app)
@@ -35,7 +52,8 @@ describe("MENU router",() => {
       username:"maestro",
       password:"test1234",
       role:"admin"
-    }).expect(201).expect("Content-type",/json/) // Utilisation d'un regex pour la validation du type de réponse
+    }).expect(201).expect("Content-type",/json/) // Utilisation d'un (tout petit) regex pour la validation du type de réponse
+    usersIDs.push(userAdmin.id)
   })
 
   /*--------------------------------------------+
@@ -48,7 +66,7 @@ describe("MENU router",() => {
     .send({
       username:"lambda",
       password:"test1234"
-    }).expect(202)
+    }).expect(200)
 
     const { token } = res.body;
     expect(token).to.be.a('string');
@@ -62,7 +80,6 @@ describe("MENU router",() => {
     expect(decoded.header).to.include({ alg: 'HS256', typ: 'JWT' }); // adapt if RS256
     expect(decoded.payload).to.include.keys(['sub', 'iat', 'exp', 'role']); // adapt to your claims
 
-
   // Et vérification de la signature du token
   const verified = jwt.verify(token, process.env.SECRET, {
     algorithms: ['HS256']
@@ -73,6 +90,7 @@ describe("MENU router",() => {
   expect(verified.exp * 1000).to.be.greaterThan(Date.now()); // On s'assure que le token est toujours valide
 
   userToken = verified // Stockage du token utilisateur.ice pour plus tard
+  rawUserToken = token
   })
 
   /*--------------------+
@@ -85,7 +103,7 @@ describe("MENU router",() => {
     .send({
       username:"maestro",
       password:"test1234"
-    }).expect(202)
+    }).expect(200)
 
     const { token } = res.body;
     expect(token).to.be.a('string');
@@ -110,6 +128,7 @@ describe("MENU router",() => {
   expect(verified.exp * 1000).to.be.greaterThan(Date.now()); // On s'assure que le token est toujours valide
 
   adminToken = verified // Stockage du token administrateur.ice pour plus tard
+  rawAdminToken = token
   })
 
   /*-----------------------------------+
@@ -120,7 +139,73 @@ describe("MENU router",() => {
     const userID = userToken.sub
     const res = await supertest(app)
     .patch(`/users/${userID}`)
-    .send('')
+    .set("Authorization",`Bearer ${rawUserToken}`)
+    .send({
+      username:"omicron",
+      password:"azerty"
+    }).expect(200)
   })
+
+  /*------------------------------------+
+  | PATCH - Modification admin -> user |
+  +------------------------------------*/
   
+  it("PATCH /users/login/<adminID> -> Maestro peut y accéder, Lambda/Omicron ne peut pas",async () => {
+    const userID = userToken.sub
+    const res = await supertest(app)
+    .patch(`/users/${userID}`)
+    .set("Authorization",`Bearer ${rawAdminToken}`)
+    .send({
+      username:"lambda",
+      email:"some.email@xyz.gay"
+    }).expect(200)
+  })
+
+  /*-----------------------------------------+
+  | PATCH - Modification user -> autre user |
+  +-----------------------------------------*/
+
+  it("PATCH /users/login/<adminID> -> Maestro pourrait y accéder, Lambda ne peut pas et prend une erreur",async () => {
+    const userID = userToken.sub
+  
+    // Création et login d'un utilisateur juste pour ce test
+    await supertest(app)
+    .post("/users/")
+    .send({
+      email:"gamma@xyz.org",
+      username:"gamma",
+      password:"test1234",
+      role:"user"
+    }).expect(201).expect("Content-type",/json/)
+
+    const _res = await supertest(app)
+    .post("/users/login")
+    .send({
+      username:"gamma",
+      password:"test1234"
+    }).expect(200)
+
+    const { token } = _res.body;
+
+    const res = await supertest(app)
+    .patch(`/users/${userID}`)
+    .set("Authorization",`Bearer ${token}`)
+    .send({
+      email:"evil.email@mean.corp",
+      username:"pwnd",
+      password:"evil-password",
+      role:"evil-admin"
+    }).expect(401).expect("Content-type",/json/)
+    expect(res.body).to.have.property('error')
+  })
 })
+
+/*------------------------------------+
+ | Suppression des utilisateur.ices   |
+ | temporaires créé.es lors des tests |
+ +------------------------------------*/
+for (let i = 0; i < usersIDs.length; i++) {
+  const gettingDeleted = usersIDs[i];
+  await supertest(app).delete(`/users/${gettingDeleted}`)
+  console.log(`User with ID <${gettingDeleted}> got deleted !`)
+}

@@ -50,7 +50,6 @@ Unit testing can be ran through the command `npm test`
 - [ ] Testing with mocha
 - [ ] Powerpoint
 
-
 ---
 # Nota Bene :
 Due to how our workflow is set up, I often review changes made by Seda and commit them. While we've been trying to avoid this, it still happens from time to time ; to see who did what, refer to CONTRIBUTING.md instead of actual commit authors.

@@ -6,9 +6,10 @@ const jwt = require("jsonwebtoken");
 
 const app = require("../app.js")
 
+// On gardera une liste des utilisateur.ices créé.es pour faciliter le nettoyage après les tests (vaut mieux éviter de chambouler la base de données entre chaque tests ;)
+let usersIDs = []
+
 describe("USER router",() => {
-  // On gardera une liste des utilisateur.ices créé.es pour faciliter le nettoyage après les tests (vaut mieux éviter de chambouler la base de données entre chaque tests ;)
-  let usersIDs = []
   let userToken
   let adminToken
   let rawAdminToken
@@ -206,6 +207,6 @@ describe("USER router",() => {
  +------------------------------------*/
 for (let i = 0; i < usersIDs.length; i++) {
   const gettingDeleted = usersIDs[i];
-  await supertest(app).delete(`/users/${gettingDeleted}`)
+  supertest(app).delete(`/users/${gettingDeleted}`)
   console.log(`User with ID <${gettingDeleted}> got deleted !`)
 }

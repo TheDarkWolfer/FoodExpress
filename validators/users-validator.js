@@ -7,7 +7,7 @@ const joi = require("joi");
 const userBase = joi.object({
   id:joi.forbidden(), // Les IDs sont gérées automatiquement, on ne laisse pas les utilisateurs ou les admins les changer
   email: joi.string().email().required(),
-  username: joi.string().alphanum().min(3).max(30).required(),
+  username: joi.string().min(3).max(30).required(),
   password: joi.string().min(6).required(),
   role: joi.string().valid('user','admin').default('user')
 });

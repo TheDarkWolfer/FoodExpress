@@ -7,8 +7,8 @@
     "test": "mocha",
     "dev": "NODE_ENV=development nodemon ./bin/www",
     "start": "NODE_ENV=production node ./bin/www",
-    "w-start":"set NODE_ENV=development && nodemon ./bin/www",
-    "w-dev":"set NODE_ENV=production && node ./bin/www"
+    "w-start": "set NODE_ENV=development && nodemon ./bin/www",
+    "w-dev": "set NODE_ENV=production && node ./bin/www"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
     "mocha": "^11.7.4",
     "mochawesome": "^7.1.4",
     "nodemon": "^3.1.10",
+    "sinon": "^21.0.0",
     "supertest": "^7.1.4"
   },
   "dependencies": {

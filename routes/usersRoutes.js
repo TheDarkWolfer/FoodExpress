@@ -21,7 +21,7 @@ router.get("/",async (req,res,next) => {
     const users = await Users.find()
     return res.status(418).json(users)
   } else {
-    return res.status(300).json({error:"Not allowed !"})
+    return res.status(403).json({error:"Not allowed !"})
   }
 })
 

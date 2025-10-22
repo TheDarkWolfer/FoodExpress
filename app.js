@@ -23,7 +23,7 @@ try {
 
 try {
   const restaurantRouter = require("./routes/restaurantRoutes.js");
-  app.use("/restaurant",restaurantRouter);
+  app.use("/restaurants",restaurantRouter);
   console.log(`Restaurant router loaded successfully !`)
 } catch(error) {
   console.error(`Error when loading restaurant router !\n-------\n${error}`)

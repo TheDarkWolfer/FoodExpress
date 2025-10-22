@@ -47,7 +47,7 @@ router.get("/",async (req,res) => {
 router.post("/",  requireAuth, async (req, res) => {
   // Validation des données 
   if (!req.body) { 
-    return res.status(418).json({error:"Missing request body !"})
+    return res.status(400).json({error:"Missing request body !"})
   }
   
   const { error, value } = RestaurantsCreate.validate(req.body);

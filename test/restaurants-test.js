@@ -35,6 +35,8 @@ describe("RESTAURANT router",() => {
     {expiresIn:process.env.JWT_EXPIRES || "1h" } // Même durée de vie
   )
 
+  let ID4l8r
+
   // "Faux" restaurant qu'on crée pour les tests ; on le supprimera plus tard.
   before(async()=>{
     const _res = await supertest(app)
@@ -47,7 +49,7 @@ describe("RESTAURANT router",() => {
       opening_hours:"Every Cycle"
     })
     .expect(201) // Devrait pas poser problème, mais on sais jamais
-    let ID4l8r = _res.body._id // on prépare une variable pour stocker l'ID qu'on va secouer un peu pour les tests
+    ID4l8r = _res.body._id // on prépare une variable pour stocker l'ID qu'on va secouer un peu pour les tests
     restaurantsIDs.push(ID4l8r) // On prévois de nettoyer après les tests, quand même
   })
 
@@ -59,9 +61,6 @@ describe("RESTAURANT router",() => {
     .get("/restaurants")
     .expect(200)
     .then((res) => {
-      // On stocke l'ID du premier restaurant qu'on attrape 
-      // pour le manipuler plus tard pour les tests
-      ID4l8r = res.body[0]._id
     })
   })
 
@@ -174,11 +173,28 @@ describe("RESTAURANT router",() => {
   it("DELETE /restaurants avec token utilisateur.ice -> Erreur 401",async () => {
     const anotherDeleteThatWillFail = await supertest(app)
     .delete(`/restaurants/${ID4l8r}`)
+    .set("Authorization",`Bearer ${userToken}`)
     .expect(401)
     .then((res) => {
       // Encore une fois, on checke que c'est la bonne erreur
       expect(res.body).to.have.property('error')
     })
+  })
+
+  it("DELETE /restaurants avec token admin -> 200",async () => {
+    const aDeleteThatWorks = await supertest(app)
+    .delete(`/restaurants/${ID4l8r}`)
+    .set("Authorization",`Bearer ${adminToken}`)
+    .expect(200)
+  })
+
+  
+  after(async () => {
+    for (let i = 0; i < restaurantsIDs.length; i++) {
+    const gettingDeleted = restaurantsIDs[i];
+    await supertest(app).delete(`/restaurants/${gettingDeleted}`).set("Authorization",`Bearer ${rawAdminToken}`)
+    console.log(`Restaurant with ID <${gettingDeleted}> got deleted !`)
+    }
   })
 
 })

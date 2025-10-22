@@ -12,36 +12,34 @@ router.use(express.json());
 
 // voir tous les restaurants
 router.get("/",async (req,res) => {
-  if (process.env.NODE_ENV === "development") {
-    try {
-      // Extraction des paramètres de requête avec valeurs par défaut
-      const { search = "", sortBy = "name", order = "asc", limit = 10, page = 1 } = req.query;
+  try {
+    // Extraction des paramètres de requête avec valeurs par défaut
+    const { search = "", sortBy = "name", order = "asc", limit = 10, page = 1 } = req.query;
 
-      // Création de l'expression régulière pour la recherche
-      const searchRegex = new RegExp(search, "i");
-      const filter = {
-        $or: [
-          { name: { $regex: searchRegex } },
-          { address: { $regex: searchRegex } }
-        ]
-      };
+    // Création de l'expression régulière pour la recherche
+    const searchRegex = new RegExp(search, "i");
+    const filter = {
+      $or: [
+        { name: { $regex: searchRegex } },
+        { address: { $regex: searchRegex } }
+      ]
+    };
 
-      // Détermination de l’ordre de tri (ascendant ou descendant)
-      const sortOrder = order === "desc" ? -1 : 1;
+    // Détermination de l’ordre de tri (ascendant ou descendant)
+    const sortOrder = order === "desc" ? -1 : 1;
 
-      // Pagination
-      const skip = (parseInt(page) - 1) * parseInt(limit);
+    // Pagination
+    const skip = (parseInt(page) - 1) * parseInt(limit);
 
-      // Requête avec filtre, tri et pagination
-      const _Restaurant = await Restaurants.find(filter)
-        .sort({ [sortBy]: sortOrder })
-        .skip(skip)
-        .limit(parseInt(limit));
-    return res.status(418).json(_Restaurant)
+    // Requête avec filtre, tri et pagination
+    const _Restaurant = await Restaurants.find(filter)
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(parseInt(limit));
+  return res.status(418).json(_Restaurant)
   } catch {
     return res.status(300).json({error:"Not allowed !"})
   }
-}
 })
 
 

@@ -40,8 +40,13 @@ router.post("/",  async (req, res) => {
     const user = await Users.create(value);
     return res.status(201).json(user);
   } catch(error) {
+
+    // On différencie les erreurs de création de compte classiques, et la tentative de création d'un.e utilisateur.ice déjà présent.e dans la BDD
+    if (error.name === "MongoServerError" && error.code === 11000) {
+      return res.status(409).json({message:'Error : attempted registration of duplicate users !'})
+    }
     console.error(`${error}`)
-    return res.status(409).json({message:'Conflicting registration request and database entry'})
+    return res.status(400).json({message:'Error during registration, please either retry or contact the administrators'})
   }
 });
 
@@ -75,7 +80,7 @@ router.delete("/:id", requireAuth, async (req, res) => {
   try {
     const user = await Users.findByIdAndDelete(req.params.id);
     if (!user) return res.status(404).json({ message: "User not found" });
-    return res.json({ message: `User ${user.name} deleted successfully` });  
+    return res.status(200).json({ message: `User ${user.name} deleted successfully` });  
   } catch(error) {
     return res.status(400).json({ message: "Invalid ID format" });
   }

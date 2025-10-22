@@ -17,7 +17,7 @@ describe("USER router",() => {
   it("GET /users",async () => {
     await supertest(app)
     .get("/users")
-    .expect(300)
+    .expect(403)
     .then((response)=>{
       assert.equal(typeof(response.body),'object')
     })
@@ -79,8 +79,8 @@ describe("USER router",() => {
     const decoded = jwt.decode(token, { complete: true });
     expect(decoded).to.be.an('object');
     expect(decoded).to.have.property('header');
-    expect(decoded.header).to.include({ alg: 'HS256', typ: 'JWT' }); // adapt if RS256
-    expect(decoded.payload).to.include.keys(['sub', 'iat', 'exp', 'role']); // adapt to your claims
+    expect(decoded.header).to.include({ alg: 'HS256', typ: 'JWT' });
+    expect(decoded.payload).to.include.keys(['sub', 'iat', 'exp', 'role']);
 
   // Et vérification de la signature du token
   const verified = jwt.verify(token, process.env.SECRET, {
@@ -146,6 +146,10 @@ describe("USER router",() => {
       username:"omicron",
       password:"azerty"
     }).expect(200)
+
+    // On s'assure vite fait que la réponse contient bien les modifications demandées
+    expect(res.body.username).to.equal("omicron");
+    expect(res.body).to.not.have.property("password"); // La réponse ne doit pas renvoyer le mdp, même hashé. On vérifie au cas où
   })
 
   /*------------------------------------+

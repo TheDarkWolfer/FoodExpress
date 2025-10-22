@@ -3,11 +3,21 @@ const { expect } = require('chai');
 const assert = require("assert").strict
 const supertest = require("supertest")
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv")
 
 const app = require("../app.js")
 
+dotenv.config()
+
 // On gardera une liste des utilisateur.ices créé.es pour faciliter le nettoyage après les tests (vaut mieux éviter de chambouler la base de données entre chaque tests ;)
 let usersIDs = []
+
+if (!/test/i.test(process.env.DB_NAME) && !(process.env.TEST_ON_PROD?.toLowerCase()==="true")) {
+  // Si les tests sont lancés sur une DB qui n'a pas une variation de "test" dans le
+  // nom, on part du principe que c'est la DB de production. Mesure de sécurité, mais
+  // qui peut être outrepassée grâce au fichier .env, même si c'est déconseillé.
+  throw new Error("NOT RUNNING ON TEST DATABASE, ABORTING ! ! !")
+}
 
 describe("USER router",() => {
   let userToken

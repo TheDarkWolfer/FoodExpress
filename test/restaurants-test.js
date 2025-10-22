@@ -35,6 +35,23 @@ describe("RESTAURANT router",() => {
     {expiresIn:process.env.JWT_EXPIRES || "1h" } // Même durée de vie
   )
 
+  // "Faux" restaurant qu'on crée pour les tests ; on le supprimera plus tard.
+  before(async()=>{
+    const _res = await supertest(app)
+    .post("/restaurants")
+    .set("Authorization",`Bearer ${adminToken}`)
+    .send({
+      name:"Outer Expanse",
+      address:"Past the Farm Arrays",
+      phone:"77777777",
+      opening_hours:"Every Cycle"
+    })
+    .expect(201) // Devrait pas poser problème, mais on sais jamais
+    let ID4l8r = _res.body._id // on prépare une variable pour stocker l'ID qu'on va secouer un peu pour les tests
+    restaurantsIDs.push(ID4l8r) // On prévois de nettoyer après les tests, quand même
+  })
+
+
   // Début des tests pour de vrai !
 
   it("GET /restaurants sans token -> Réussite et affichage des restaurants",async () => {
@@ -44,7 +61,7 @@ describe("RESTAURANT router",() => {
     .then((res) => {
       // On stocke l'ID du premier restaurant qu'on attrape 
       // pour le manipuler plus tard pour les tests
-      const ID4l8r = res.body[0]._id
+      ID4l8r = res.body[0]._id
     })
   })
 
@@ -107,5 +124,61 @@ describe("RESTAURANT router",() => {
 
   // Maintenant qu'on a bien vérifié la création de restaurants, on passe à la suite
 
-  it("")
+  it("PATCH /restaurants sans token valide -> Erreur 401",async () => {
+    const patch2Fail = await supertest(app)
+    .patch(`/restaurants/${ID4l8r}`)
+    .send({
+      name:"Subterranean"
+    })
+    .expect(401)
+    .then((res)=>{
+      expect(res.body).to.have.property('error').that.equals('Missing or invalid Authorization header')
+    })
+  })
+
+  it("PATCH /restaurants avec un token utilisateur.ice -> Erreur 403",async() => {
+    const otherPatch2Fail = await supertest(app)
+    .patch(`/restaurants/${ID4l8r}`)
+    .set("Authorization",`Bearer ${userToken}`)
+    .send({
+      name:"Metropolis"
+    })
+    .expect(403)
+    .then((res) => {
+      expect(res.body).to.have.property('error').that.equals("Access forbidden to this ID, sorry")
+    })
+  })
+
+  it("PATCH /restaurants avec des données invalides",async () => {
+    const patchWithBadData = await supertest(app)
+    .patch(`/restaurants/${ID4l8r}`)
+    .set("Authorization",`Bearer ${adminToken}`)
+    .send({
+      name:"Metropolis",
+      owner:"Five Pebbles"
+    })
+    .expect(400)
+  })
+
+  // On garde les DELETE pour la fin
+  it("DELETE /restaurants sans token valide -> Erreur 401",async ()=> {
+    const deleteThatWillFail = await supertest(app)
+    .delete(`/restaurants/${ID4l8r}`)
+    .expect(401)
+    .then((res)=>{
+      // On vérifie qu'on a la bonne erreur
+      expect(res.body).to.have.property('error')
+    })
+  })
+
+  it("DELETE /restaurants avec token utilisateur.ice -> Erreur 401",async () => {
+    const anotherDeleteThatWillFail = await supertest(app)
+    .delete(`/restaurants/${ID4l8r}`)
+    .expect(401)
+    .then((res) => {
+      // Encore une fois, on checke que c'est la bonne erreur
+      expect(res.body).to.have.property('error')
+    })
+  })
+
 })

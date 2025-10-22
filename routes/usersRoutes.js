@@ -46,7 +46,7 @@ router.post("/",  async (req, res) => {
       return res.status(409).json({message:'Error : attempted registration of duplicate users !'})
     }
     console.error(`${error}`)
-    return res.status(400).json({message:'Error during registration, please either retry or contact the administrators'})
+    return res.status(400).json({error:error})
   }
 });
 

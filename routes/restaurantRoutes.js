@@ -36,7 +36,7 @@ router.get("/",async (req,res) => {
       .sort({ [sortBy]: sortOrder })
       .skip(skip)
       .limit(parseInt(limit));
-  return res.status(418).json(_Restaurant)
+  return res.status(200).json(_Restaurant)
   } catch {
     return res.status(300).json({error:"Not allowed !"})
   }

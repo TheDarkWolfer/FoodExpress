@@ -47,7 +47,13 @@ Unit testing can be ran through the command `npm test`
 
 ### Other :
 - [ ] Documentation using swagger/openapi
+  - [ ] Doc pour /users
+  - [ ] Doc pour /restaurants
+  - [ ] Doc pour /menus
 - [ ] Testing with mocha
+  - [ ] Tests pour /users **WIP** <-Camille
+  - [ ] Tests pour /restaurants **WIP** <-Camille
+  - [ ] Tests pour /menus
 - [ ] Powerpoint
 
 ---

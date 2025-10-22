@@ -10,11 +10,11 @@ function requireAuth(req, res, next) {
   const header = req.headers.authorization || ''; // Récupération du token dans les en-têtes
   const token = header.startsWith('Bearer ') ? header.slice(7) : null;
   if (!token) {
-
     return res.status(401).json({ error: 'Missing or invalid Authorization header' });
   }
 
   try {
+    // On décode le token pour pouvoir vérifier sa validité, et aussi récupérer les données qu'il contient.
     const decoded = jwt.verify(token, process.env.SECRET);
     req.auth = {
       username: String(decoded.username),
@@ -23,12 +23,22 @@ function requireAuth(req, res, next) {
     };
     //console.log("Decoding token...") // Gardé en commentaire pour faciliter tout débuggage futur
     req.user = decoded;
-    if ((req.auth.userId == req.params.id) || (req.auth.role == "admin")) {
+
+
+    /*
+    Si il y a une partie "authentification", on vérifie deux choses :
+      - Si l'ID du token est la même que celle que l'utilisateur.ice dans l'URL de la requête
+      - Sinon, si le rôle est bien celui d'un.e admin
+    Sinon, (le résultat par "défaut"), on refuse l'accès
+    */
+    if (req.auth.userId === req.params.id || req.auth.role === "admin") {
       return next();
-    } else {
-      return res.status(401).json({error:"Access forbidden to this ID"})
     }
+
+    return res.status(403).json({error:"Access forbidden to this ID, sorry"})
+    
   } catch (e) {
+    // Et en cas de résultat inattendu (normalement il devrait pas y en avoir), on le log et le transmet à l'utilisateur.ice
     console.error(e)
     return res.status(400).json({ error: "Please don't break our API '~'" });
   }

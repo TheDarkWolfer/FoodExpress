@@ -32,7 +32,7 @@ describe("USER router",() => {
       password:"test1234",
       role:"user"
     }).expect(201).expect("Content-type",/json/)
-    usersIDs.push(userBody.id)
+    usersIDs.push(userBody.body.id)
   })
   it("POST /users -> création d'un.e utilisateur.ice déjà présent.e dans la base de données",async()=>{
     const duplicateBody = await supertest(app)
@@ -43,7 +43,8 @@ describe("USER router",() => {
       password:"qwerty",
       role:"user"
     }).expect(409)
-    usersIDs.push(duplicateBody.id)
+    // usersIDs.push(duplicateBody.body.id) // J'ai laissé ça là au cas où, mais normalement la création de cet.te utilisateur.ice échoue
+                                          // alors c'est pas nécessaire
   })
   it("POST /users -> création d'utilisateur admin",async () => {
     const userAdmin = await supertest(app)
@@ -54,7 +55,7 @@ describe("USER router",() => {
       password:"test1234",
       role:"admin"
     }).expect(201).expect("Content-type",/json/) // Utilisation d'un (tout petit) regex pour la validation du type de réponse
-    usersIDs.push(userAdmin.id)
+    usersIDs.push(userAdmin.body.id)
   })
 
   /*--------------------------------------------+
@@ -170,7 +171,7 @@ describe("USER router",() => {
     const userID = userToken.sub
   
     // Création et login d'un utilisateur juste pour ce test
-    await supertest(app)
+    const gammaRes = await supertest(app)
     .post("/users/")
     .send({
       email:"gamma@xyz.org",
@@ -178,6 +179,8 @@ describe("USER router",() => {
       password:"test1234",
       role:"user"
     }).expect(201).expect("Content-type",/json/)
+
+    usersIDs.push(gammaRes.body.id)
 
     const _res = await supertest(app)
     .post("/users/login")
@@ -196,17 +199,40 @@ describe("USER router",() => {
       username:"pwnd",
       password:"evil-password",
       role:"evil-admin"
-    }).expect(401).expect("Content-type",/json/)
+    }).expect(403).expect("Content-type",/json/)
     expect(res.body).to.have.property('error')
   })
+
+  /*-----------------------------------------------------+
+  | Vérification du refus d'accès sans authentification |
+  +-----------------------------------------------------*/
+
+  it("Tente un PATCH sur l'ID d'un.e utilisateur.ice sans authentification",async () => {
+    const randomID = usersIDs[Math.floor(Math.random() * usersIDs.length)]; // On choisis une ID aléatoire, le test doit échouer de toute manière
+    await supertest(app)
+    .patch(`/users/${randomID}`)
+    .send({
+      email:"this.should@fail.now"
+    }).expect(401)
+  })
+  it("Tente un DELETE sur l'ID d'un.e utilisateur.ice sans authentification",async () => {
+    const randomID = usersIDs[Math.floor(Math.random() * usersIDs.length)]; // ID aléatoire, encore une fois
+    await supertest(app)
+    .delete(`/users/${randomID}`)
+    .expect(401)
+  })
+
+
+  /*------------------------------------+
+   | Suppression des utilisateur.ices   |
+   | temporaires créé.es lors des tests |
+   +------------------------------------*/
+  after(async () => {
+    for (let i = 0; i < usersIDs.length; i++) {
+    const gettingDeleted = usersIDs[i];
+    await supertest(app).delete(`/users/${gettingDeleted}`).set("Authorization",`Bearer ${rawAdminToken}`)
+    console.log(`User with ID <${gettingDeleted}> got deleted !`)
+  }
 })
 
-/*------------------------------------+
- | Suppression des utilisateur.ices   |
- | temporaires créé.es lors des tests |
- +------------------------------------*/
-for (let i = 0; i < usersIDs.length; i++) {
-  const gettingDeleted = usersIDs[i];
-  supertest(app).delete(`/users/${gettingDeleted}`)
-  console.log(`User with ID <${gettingDeleted}> got deleted !`)
-}
+})

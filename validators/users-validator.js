@@ -13,9 +13,19 @@ const userBase = joi.object({
 });
 
 // Dérivé du validateur de base pour la création, requiert tous les paramètres
-const userCreate = userBase.fork(['email','username','password','role'], s => s.required());
+const userCreate = userBase.fork([
+  'email',
+  'username',
+  'password',
+  'role'
+], s => s.required());
 
 // Second dérivé du validateur de base, cette fois pour la MàJ : minimum un paramètre
-const userUpdate = userBase.fork(['email','username','password','role'], s => s.optional()).min(1);
+const userUpdate = userBase.fork([
+  'email',
+  'username',
+  'password',
+  'role'
+], s => s.optional()).min(1);
 
 module.exports = { userCreate, userUpdate}

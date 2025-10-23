@@ -12,10 +12,32 @@ router.use(express.json());
 
 // voir les Menus
 router.get("/",async (req,res) => {
-  if (process.env.NODE_ENV === "development") {
-    const menus = await Menus.find()
-    return res.status(418).json(menus)
-  } else {
+  try {
+    // Extraction des paramètres de requête avec valeurs par défaut
+    const { search = "", sortBy = "name", order = "asc", limit = 10, page = 1 } = req.query;
+
+    // Création de l'expression régulière pour la recherche
+    const searchRegex = new RegExp(search, "i");
+    const filter = {
+      $or: [
+        { name: { $regex: searchRegex } },
+        { address: { $regex: searchRegex } }
+      ]
+    };
+
+    // Détermination de l’ordre de tri (ascendant ou descendant)
+    const sortOrder = order === "desc" ? -1 : 1;
+
+    // Pagination
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    // Requête avec filtre, tri et pagination sur les menus
+    const _Menu = await Menus.find(filter)
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(parseInt(limit));
+  return res.status(200).json(_Menu)
+  } catch {
     return res.status(300).json({error:"Not allowed !"})
   }
 })
@@ -35,7 +57,7 @@ router.post("/",  requireAuth, async (req, res) => {
 });
 
 // Lecture  menus
-router.get("/:id", requireAuth, async (req, res) => {
+router.get("/:id", async (req, res) => {
   const _Menus = await Menus.findById(req.params.id);
   if (!_Menus) return res.status(404).json({ message: "user not found" });
   res.json(_Menus);

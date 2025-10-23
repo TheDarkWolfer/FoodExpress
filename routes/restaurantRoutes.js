@@ -61,7 +61,7 @@ router.post("/",  requireAuth, async (req, res) => {
 });
 
 // Lecture restaurant 
-router.get("/:id", requireAuth, async (req, res) => {
+router.get("/:id", async (req, res) => {
   const _Restaurant = await Restaurants.findById(req.params.id);
   if (!_Restaurant) return res.status(404).json({ message: "Restaurant not found" });
   res.json(_Restaurant);
@@ -77,14 +77,14 @@ router.patch("/:id", requireAuth, async (req, res) => {
   const _Restaurant = await Restaurants.findByIdAndUpdate(req.params.id, value, { new: true });
   if (!_Restaurant) return res.status(404).json({ message: "Restaurant not found" });
 
-  res.json(Restaurants);
+  return res.status(200).json(_Restaurant);
 });
 
 // Suppression resaturant par ID 
 router.delete("/:id", requireAuth, async (req, res) => {
   try {
     const _Restaurant = await Restaurants.findByIdAndDelete(req.params.id);
-    if (!_Restaurant) return res.status(404).json({ message: "User not found" });
+    if (!_Restaurant) return res.status(404).json({ message: "Restaurant not found" });
     return res.json({ message: `User ${_Restaurant.name} deleted successfully` });  
   } catch(error) {
     return res.status(400).json({ message: "Invalid ID format" });

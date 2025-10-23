@@ -174,7 +174,7 @@ describe("RESTAURANT router",() => {
     const anotherDeleteThatWillFail = await supertest(app)
     .delete(`/restaurants/${ID4l8r}`)
     .set("Authorization",`Bearer ${userToken}`)
-    .expect(401)
+    .expect(403)
     .then((res) => {
       // Encore une fois, on checke que c'est la bonne erreur
       expect(res.body).to.have.property('error')
@@ -192,7 +192,7 @@ describe("RESTAURANT router",() => {
   after(async () => {
     for (let i = 0; i < restaurantsIDs.length; i++) {
     const gettingDeleted = restaurantsIDs[i];
-    await supertest(app).delete(`/restaurants/${gettingDeleted}`).set("Authorization",`Bearer ${rawAdminToken}`)
+    await supertest(app).delete(`/restaurants/${gettingDeleted}`).set("Authorization",`Bearer ${adminToken}`)
     console.log(`Restaurant with ID <${gettingDeleted}> got deleted !`)
     }
   })

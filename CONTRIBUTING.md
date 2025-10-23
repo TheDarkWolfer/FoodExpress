@@ -22,7 +22,7 @@ Unit testing can be ran through the command `npm test`
 - [x] *J*avascript*W*eb*T*okens -> **[jwt](jwt.io)** <-Camille
 	- [x] Read on restaurants and menus => No auth ***W.I.P.*** <-Camille
 	- [x] Stateless auth for write actions ***W.I.P.*** <-Camille
-#### /restaurant
+#### /restaurant <-Seda
 - [x] *CRUD* operations
 - [x] **DATA**{
 	- [x] name=>string,
@@ -41,20 +41,20 @@ Unit testing can be ran through the command `npm test`
 	- [x] price=>float,
 	- [x] category=>string,
 - [x] }
-- [x] Admin-only creation, update and deletion
+- [x] Admin-only creation, update and deletion **WIP** <-Camille
 - [x] Public read access with optional sorting by price/category
 - [x] Adjustable pagination limit (default 10, adjusted through query parameters)
 
 ### Other :
 - [ ] Documentation using swagger/openapi
-  - [ ] Doc pour /users
-  - [ ] Doc pour /restaurants
-  - [ ] Doc pour /menus
-- [ ] Testing with mocha
+  - [ ] Doc pour /users **WIP** <-Camille
+  - [ ] Doc pour /restaurants **WIP** <-Seda
+  - [ ] Doc pour /menus **WIP** <-Seda
+- [ ] Testing with mocha **WIP** <-Seda/Camille
   - [x] Tests pour /users <-Camille
   - [x] Tests pour /restaurants <-Camille
   - [ ] Tests pour /menus **WIP** <-Camille
-- [ ] Powerpoint **WIP** <-Seda
+- [x] Powerpoint **WIP** <-Seda/Camille
 
 ---
 # Nota Bene :

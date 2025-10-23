@@ -20,8 +20,8 @@ Unit testing can be ran through the command `npm test`
 - [x] Admins can create/modify/delete any account <-Camille
 - [x] Compartmentalization between user's PII <-Camille
 - [x] *J*avascript*W*eb*T*okens -> **[jwt](jwt.io)** <-Camille
-	- [ ] Read on restaurants and menus => No auth ***W.I.P.*** <-Camille
-	- [ ] Stateless auth for write actions ***W.I.P.*** <-Camille
+	- [x] Read on restaurants and menus => No auth ***W.I.P.*** <-Camille
+	- [x] Stateless auth for write actions ***W.I.P.*** <-Camille
 #### /restaurant
 - [x] *CRUD* operations
 - [x] **DATA**{
@@ -31,8 +31,8 @@ Unit testing can be ran through the command `npm test`
 	- [x] opening hours=>json,
 - [x] }[[3API - DB]]
 - [x] Admin-only creation, update and deletion ***W.I.P.*** <-Camille
-- [ ] Public read access with optional sorting by name/address
-- [ ] Adjustable pagination limit (default 10, adjusted through query parameters)
+- [x] Public read access with optional sorting by name/address
+- [x] Adjustable pagination limit (default 10, adjusted through query parameters)
 #### /menus <- Seda
 - [x] *CRUD* operations
 - [x] **DATA**{
@@ -43,7 +43,7 @@ Unit testing can be ran through the command `npm test`
 - [x] }
 - [x] Admin-only creation, update and deletion
 - [x] Public read access with optional sorting by price/category
-- [ ] Adjustable pagination limit (default 10, adjusted through query parameters)
+- [x] Adjustable pagination limit (default 10, adjusted through query parameters)
 
 ### Other :
 - [ ] Documentation using swagger/openapi
@@ -51,10 +51,10 @@ Unit testing can be ran through the command `npm test`
   - [ ] Doc pour /restaurants
   - [ ] Doc pour /menus
 - [ ] Testing with mocha
-  - [ ] Tests pour /users **WIP** <-Camille
-  - [ ] Tests pour /restaurants **WIP** <-Camille
-  - [ ] Tests pour /menus
-- [ ] Powerpoint
+  - [x] Tests pour /users <-Camille
+  - [x] Tests pour /restaurants <-Camille
+  - [ ] Tests pour /menus **WIP** <-Camille
+- [ ] Powerpoint **WIP** <-Seda
 
 ---
 # Nota Bene :

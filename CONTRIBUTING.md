@@ -50,10 +50,10 @@ Unit testing can be ran through the command `npm test`
   - [ ] Doc pour /users **WIP** <-Camille
   - [ ] Doc pour /restaurants **WIP** <-Seda
   - [ ] Doc pour /menus **WIP** <-Seda
-- [ ] Testing with mocha **WIP** <-Seda/Camille
+- [x] Testing with mocha <-Seda/Camille
   - [x] Tests pour /users <-Camille
   - [x] Tests pour /restaurants <-Camille
-  - [ ] Tests pour /menus **WIP** <-Camille
+  - [x] Tests pour /menus <-Camille
 - [x] Powerpoint **WIP** <-Seda/Camille
 
 ---

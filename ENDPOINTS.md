@@ -33,8 +33,8 @@
 - Utilisation de Mocha pour les tests,
   - Mochawesome permet d'avoir un compte-rendu plus visuel
   - Suite de modules de tests :
-    - *mocha* : structure de base des tests
-    - *chai* : similaire à *mocha* : structure de base des tests
+    - *mocha* : framework de tests choisi
+    - *chai* : structure de base des tests
     - *sinon* : Mocks, Stubs et similaires, bien que pas encore utilisés
     - *supertest* : simulation de l'API
     - *assert* : vérification de données

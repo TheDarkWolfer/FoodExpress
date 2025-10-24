@@ -12,6 +12,40 @@
   - Admin-only creation, update and deletion
   - Public read access
 
+## Installation
+> Le guide d'installation part du principe que vous avez déjà [NodeJS](https://nodejs.org/) >= 22.21.0 et [npm](https://www.npmjs.com/) >= 11.6.2
+Les fichiers importants du projet sont tous présents sur ce dépôt. Vous pouvez donc le récupérer comme suit, et en installer les dépendances:
+```shell
+git clone https://github.com/TheDarkWolfer/FoodExpress
+cd FoodExpress
+npm install
+```
+Suite à cela, vous avez plusieurs options qui s'offrent à vous. Le projet a deux modes de fonctionnement : `development` et `production`. 
+En mode `development`, deux endpoints supplémentaires sont disponibles : /api-docs et /users (GET).
+- **/api-docs** :
+  - Accès à la documentation Swagger/OpenAPI
+- **/users (GET)** : 
+  - Accès aux informations utilisateur.ices (mot de passe omis par sécurité)
+Le reste de la configuration, tel que le choix de la base de données, se fait à travers le .env comme décrit dans [ENDPOINTS.md](ENDPOINTS.md#env)
+### Windows :
+Lancement en mode `development` :
+```shell
+npm run w-dev
+```
+Lancement en mode `production` :
+```shell
+npm run w-start
+```
+### Unix : 
+Lancement en mode `development` :
+```shell
+npm run dev
+```
+Lancement en mode `production` :
+```shell
+npm run start
+```
+> La différenciation entre l'environnement de production et celui de développement se fait grâce à la valeur de la variable d'environnement `NODE_ENV`, omise dans le .env pour permettre une utilisation plus libre de cette fonctionnalité. 
 
 ---
 # Nota Bene :

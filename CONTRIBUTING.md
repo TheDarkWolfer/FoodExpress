@@ -55,6 +55,8 @@ Unit testing can be ran through the command `npm test`
   - [x] Tests pour /restaurants <-Camille
   - [x] Tests pour /menus <-Camille
 - [x] Powerpoint **WIP** <-Seda/Camille
+- [ ] Nettoyer le code ;_;
+- [ ] Commenter un peu plus le code ;_;
 
 ---
 # Nota Bene :

@@ -52,6 +52,7 @@ router.get("/",async (req,res,next) => {
  * @swagger
  * /users:
  *  post:
+ *   summary: Création d'utilisateur.ice
  *   description: Création d'utilisateur.ice
  *   requestBody:
  *     required: true
@@ -110,7 +111,8 @@ router.post("/",  async (req, res) => {
  * @swagger
  * /users/<ID>:
  *  get:
- *    description: Accès aux données d'un.e utilisateur.ice précis.e, par ID
+ *    summary: Accès aux données d'un.e utilisateur.ice précis.e, par ID
+ *    description: Permet la lecture d'un.e utilisateur.ice par ID et affiche l'email, l'username, le rôle et l'ID
  *    security:
  *      - bearerAuth: []
  *    parameters: 
@@ -200,6 +202,33 @@ router.patch("/:id", requireAuth, async (req, res) => {
 });
 
 // Suppression d'utilisateur.ice par ID ; vérification du jeton d'authentification
+/**
+ *  @swagger
+ *  /users/<ID>:
+ *    delete:
+ *      description: Suppression d'utilisateur.ice
+ *      security: 
+ *        - bearerAuth: []
+ *      parameters: 
+ *        - name: id
+ *          in: path
+ *          required: true
+ *          description: L'ID de l'utilisateur.ice à supprimer
+ *          schema:
+ *            type: string
+ *      responses:
+ *        200:
+ *          description: Utilisateur.ice supprimé.e avec succès
+ *  
+ *        400:
+ *          description: Erreur interne lors de la suppresssion
+ *          content:
+ *            application/json:
+ *              schema:
+ *                items:
+ *                  $ref: '#/components/schemas/Error'
+ *            
+ */
 router.delete("/:id", requireAuth, async (req, res) => {
   try {
     const user = await Users.findByIdAndDelete(req.params.id);
@@ -209,7 +238,43 @@ router.delete("/:id", requireAuth, async (req, res) => {
     return res.status(400).json({ message: "Invalid ID format" });
   }
 });
-
+/**
+ *  @swagger
+ *  /users/login:
+ *  post:
+ *    description: Authentification d'un.e utilisateur.ice par username et mot de passe
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/UserLogin'
+ *    responses:
+ *      200:
+ *        description: Connexion réussie et transmission d'un token JWT valide
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                token:
+ *                  type: string
+ *                  description: JWT valide pour la durée définie dans le .env
+ *                user:
+ *                  $ref: '#/components/schemas/User'
+ *      400:
+ *        description: Erreur par manque de crédentiels
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Error'
+ *      401:
+ *        description: Crédentiels invalides (username ou mot de passe)
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Error'
+*/
 router.post("/login", async (req,res,next) => {
   try {
     const {username, password} = req.body; // Bon, il faut mentionner l'utilité d'un certificat SSL lors du déploiement ^.^

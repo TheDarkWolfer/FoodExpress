@@ -57,6 +57,25 @@ if (process.env.NODE_ENV === "development") {
               role:{type:'string',enum:['user','admin']},
             }
           },
+          UserLogin:{
+            type:'object',
+            properties:{
+              username:{
+                type:'string',
+                description:'Nom d\'utilisateur.ice',
+                example:'lambda',
+                required:true,
+              },
+              password:{
+                type:'string',
+                format:'password',
+                description:'Mot de passe en clair, vérifié par hashage',
+                writeOnly:true,
+                example:'test1234',
+                required:true,
+              }
+            }
+          },
           UserCreate:{
             type:'object',
             properties:{

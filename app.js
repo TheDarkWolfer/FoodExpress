@@ -150,7 +150,7 @@ try {
 
 try {
   const menuRouter = require("./routes/menusRoutes.js");
-  app.use("/menu",menuRouter);
+  app.use("/menus",menuRouter);
   console.log(`Menu router loaded successfully !`)
 } catch(error) {
   console.error(`Error when loading menu router !\n-------\n${error}`)

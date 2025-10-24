@@ -35,7 +35,7 @@ describe("MENU router",() => {
   // "Faux" menu qu'on crée pour les tests ; on le supprimera plus tard.
   before(async()=>{
     const _res = await supertest(app)
-    .post("/menu")
+    .post("/menus")
     .set("Authorization",`Bearer ${adminToken}`)
     .send({
       name:"Fillet o' Jetfish",
@@ -49,17 +49,17 @@ describe("MENU router",() => {
   })
 
   // Test de lecture des menus
-  it("GET /menu -> 200 avec les données en JSON",async () => {
+  it("GET /menus -> 200 avec les données en JSON",async () => {
     const gettingAllMenus = await supertest(app)
-    .get("/menu")
+    .get("/menus")
     .expect(200)
     .expect("Content-Type",/json/) // On vérifie qu'on a bien un objet JSON
   })
 
   // Test de lecture avec opérateur de recherche
-  it("GET /menu avec query -> 200 avec des données JSON filtrées",async () => {
+  it("GET /menus avec query -> 200 avec des données JSON filtrées",async () => {
     const gettingMenus = await supertest(app)
-    .get("/menu")
+    .get("/menus")
     .query({search:"Bat"})
     .expect(200)
     .expect("Content-Type",/json/)
@@ -72,9 +72,9 @@ describe("MENU router",() => {
   })
 
   // Création d'un menu, sans token valide
-  it("POST /menu sans token -> 401 Unauthorized",async () => {
+  it("POST /menus sans token -> 401 Unauthorized",async () => {
     const unauthorizedAttempt = await supertest(app)
-    .post("/menu")
+    .post("/menus")
     .send({
       name:"Unfortunate Development",
       description:"The results of poor planning",
@@ -85,9 +85,9 @@ describe("MENU router",() => {
   })
 
   // Création d'un menu avec token utilisateur.ice
-  it("POST /menu avec token utilisateur.ice -> 403 Forbidden",async () => {
+  it("POST /menus avec token utilisateur.ice -> 403 Forbidden",async () => {
     const forbiddenAttempt = await supertest(app)
-    .post("/menu")
+    .post("/menus")
     .set("Authorization",`Bearer ${userToken}`)
     .send({
       name:"Coalescepide Curry",
@@ -99,9 +99,9 @@ describe("MENU router",() => {
   })
 
   // Création d'un menu avec un token administrateur.ice
-  it("POST /menu avec token administrateur.ice -> 201 Created",async () => {
+  it("POST /menus avec token administrateur.ice -> 201 Created",async () => {
     const newMenuCreation = await supertest(app)
-    .post("/menu")
+    .post("/menus")
     .set("Authorization",`Bearer ${adminToken}`)
     .send({
       name:"Neuron Fly",
@@ -120,9 +120,9 @@ describe("MENU router",() => {
   })
 
   // PATCH non-authentifié
-  it("PATCH /menu/<ID> sans token -> 401 Unauthorized",async () => {
+  it("PATCH /menus/<ID> sans token -> 401 Unauthorized",async () => {
     const unauthenticatedPatch = await supertest(app)
-    .patch(`/menu/${ID4l8r}`)
+    .patch(`/menus/${ID4l8r}`)
     .send({
       name:"Red Spider Roast",
       description:"Just mind the toxins..."
@@ -131,9 +131,9 @@ describe("MENU router",() => {
   })
 
   // Patch avec un token utilisateur.ice 
-  it("PATCH /menu/<ID> avec un token utilisateur.ice -> 403 Forbidden",async () => {
+  it("PATCH /menus/<ID> avec un token utilisateur.ice -> 403 Forbidden",async () => {
     const forbiddenPatch = await supertest(app)
-    .patch(`/menu/${ID4l8r}`)
+    .patch(`/menus/${ID4l8r}`)
     .set("Authorization",`Bearer ${userToken}`)
     .send({
       name:"Chilly Popcorn plant",
@@ -143,9 +143,9 @@ describe("MENU router",() => {
   })
 
   // Patch avec un token administrateur.ice
-  it("PATCH /menu/<ID> avec un token administrateur.ice -> 200",async () => {
+  it("PATCH /menus/<ID> avec un token administrateur.ice -> 200",async () => {
     const successfulPatch = await supertest(app)
-    .patch(`/menu/${ID4l8r}`)
+    .patch(`/menus/${ID4l8r}`)
     .set("Authorization",`Bearer ${adminToken}`)
     .send({
       name:"[REDACTED]",
@@ -158,23 +158,23 @@ describe("MENU router",() => {
   })
   
   // DELETE sans token
-  it("DELETE /menu/<ID> -> 401",async () => {
+  it("DELETE /menus/<ID> -> 401",async () => {
     const unauthorizedDelete = await supertest(app)
-    .delete(`/menu/${ID4l8r}`)
+    .delete(`/menus/${ID4l8r}`)
     .expect(401)
   })
 
   // DELETE avec token utilisateur.ice
-  it("DELETE /menu/<ID> avec token utilisateur.ice -> 403",async () => {
+  it("DELETE /menus/<ID> avec token utilisateur.ice -> 403",async () => {
     const forbiddenDelete = await supertest(app)
-    .delete(`/menu/${ID4l8r}`)
+    .delete(`/menus/${ID4l8r}`)
     .set("Authorization",`Bearer ${userToken}`)
     .expect(403)
   })
 
-  it("DELETE /menu/<ID> avec token administrateur.ice -> 200",async () => {
+  it("DELETE /menus/<ID> avec token administrateur.ice -> 200",async () => {
     const successfulDelete = await supertest(app)
-    .delete(`/menu/${ID4l8r}`)
+    .delete(`/menus/${ID4l8r}`)
     .set("Authorization",`Bearer ${adminToken}`)
     .expect(200)
     menusIDs = menusIDs.filter(id => id !== ID4l8r)
@@ -183,7 +183,7 @@ describe("MENU router",() => {
   after(async () => {
     for (let i = 0; i < menusIDs.length; i++) {
     const gettingDeleted = menusIDs[i];
-    await supertest(app).delete(`/menu/${gettingDeleted}`).set("Authorization",`Bearer ${adminToken}`)
+    await supertest(app).delete(`/menus/${gettingDeleted}`).set("Authorization",`Bearer ${adminToken}`)
     console.log(`Menu with ID <${gettingDeleted}> got deleted !`)
     }
   })

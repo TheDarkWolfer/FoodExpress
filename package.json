@@ -24,7 +24,10 @@
     "mochawesome": "^7.1.4",
     "nodemon": "^3.1.10",
     "sinon": "^21.0.0",
-    "supertest": "^7.1.4"
+    "supertest": "^7.1.4",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui": "^5.29.5",
+    "swagger-ui-express": "^5.0.1"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

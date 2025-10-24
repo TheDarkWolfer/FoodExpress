@@ -16,17 +16,72 @@ router.use(express.json());
  +--------*/
 
 // Vite fait : comment voir tous les utilisateur.ices (uniquement fonctionnel dans l'environnement de dév)
+/**
+ * @swagger
+ * /users:
+ *  get:
+ *    summary: Gestion des utilisateur.ices
+ *    description: Surtout pour débugger, renvoie un array avec les utilisateur.ices et leur IDs, pseudonyme, mél, et rôle, le mot de passe étant omis pour des raisons de sécurité
+ *    responses:
+ *      200:
+ *        description: Array d\'utilisateur.ices
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/User'
+ *      403:
+ *        description: Tentative d'accès au noeud en production
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Error'
+ */
 router.get("/",async (req,res,next) => {
   if (process.env.NODE_ENV === "development") {
     const users = await Users.find()
-    return res.status(418).json(users)
+    return res.status(200).json(users)
   } else {
     return res.status(403).json({error:"Not allowed !"})
   }
 })
 
-
 // Création d'utilisateur.ice (ajouter l'authentification plus tard - admin uniquement)
+/**
+ * @swagger
+ * /users:
+ *  post:
+ *   description: Création d'utilisateur.ice
+ *   requestBody:
+ *     required: true
+ *     content:
+ *       application/json:
+ *         schema:
+ *           $ref: '#/components/schemas/UserCreate'
+ *      
+ *   responses:
+ *     201:
+ *       description: Utilisateur.ice créé.e
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items: 
+ *               $ref: '#/components/schemas/User'
+ *     400:
+ *       description: Erreur de validation
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Error'
+ *     409:
+ *       description: Erreur car duplicata d'utilisateur.ice
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Error'
+ */
 router.post("/",  async (req, res) => {
   // Validation des données envoyées avant création
   const { error, value } = userCreate.validate(req.body);
@@ -50,13 +105,82 @@ router.post("/",  async (req, res) => {
   }
 });
 
-// Lecture d'un.e utilisateur.ices (ajouter l'authentification plus tard)
+// Lecture d'un.e utilisateur.ices
+/**
+ * @swagger
+ * /users/<ID>:
+ *  get:
+ *    description: Accès aux données d'un.e utilisateur.ice précis.e, par ID
+ *    security:
+ *      - bearerAuth: []
+ *    parameters: 
+ *      - name: id
+ *        in: path
+ *        required: true
+ *        description: ID de l'utilisateur.ice à afficher
+ *        schema:
+ *          type: string
+ *          example: 68f8f09b07afe91a0a2b6e5d
+ * 
+ *    responses:
+ *      200:
+ *        description: Données utilisateur.ices affichées
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/User'
+ *      404:
+ *        description: Utilisateur.ice non trouvé
+ *      
+ */
 router.get("/:id", requireAuth, async (req, res) => {
   const user = await Users.findById(req.params.id);
   if (!user) return res.status(404).json({ message: "user not found" });
   return res.status(200).json(user);
 });
 
+/**
+ * @swagger
+ * /users/<ID>:
+ *  patch:
+ *    description: Modification des utilisateur.ices
+ *    security:
+ *      - bearerAuth: []
+ *    parameters:
+ *      - name: id
+ *        in: path
+ *        required: true
+ *        description: ID de l'utilisateur.ice à modifier
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/User'
+ *    responses:
+ *      400:
+ *        description: Erreur de validation
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Error'
+ *      404:
+ *        description: Utilisateur.ice non trouvé
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Error'
+ * 
+ *      200:
+ *       description: Données utilisateur.ice modifiées
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items: 
+ *               $ref: '#/components/schemas/User'
+ *              
+ */
 // Mise à jour des données utilisateur.ices, validation des données avec JOI
 router.patch("/:id", requireAuth, async (req, res) => {
   // Fix pour l'Issue #1 : hashage non appliqué en cas de PATCH

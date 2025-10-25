@@ -85,7 +85,7 @@ if (process.env.NODE_ENV === "development") {
               role:{type:'string',enum:['user','admin']}
             }
           },
-          Menu:{
+          Menus:{
             type:'object',
             properties:{
               _id:{type:'string'},
@@ -95,10 +95,28 @@ if (process.env.NODE_ENV === "development") {
               category:{type:'string'},
             },
           },
-          Restaurant:{
+          MenusCreate:{
+            type:'object',
+            properties:{
+              name:{type:'string'},
+              description:{type:'string'},
+              price:{type:'number',format:'float'},
+              category:{type:'string'}
+            }
+          },
+          Restaurants:{
             type:'object',
             properties:{
               _id:{type:'string'},
+              name:{type:'string'},
+              address:{type:'string'},
+              phone:{type:'integer'},
+              opening_hours:{type:'string'},
+            }
+          },
+          RestaurantsCreate:{
+            type:'object',
+            properties:{
               name:{type:'string'},
               address:{type:'string'},
               phone:{type:'integer'},

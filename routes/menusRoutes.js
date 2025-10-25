@@ -10,8 +10,7 @@ const { requireAuth, requireRole } = require("../middleware/auth");
 const router = express.Router();
 router.use(express.json());
 
-
-// swagger voir menus 
+// voir les Menus
 /**
  * @swagger
  * /users/<ID>:
@@ -40,17 +39,39 @@ router.use(express.json());
  *        description: Menu non trouvé
  *      
  */
-// voir les Menus
 router.get("/",async (req,res) => {
-  if (process.env.NODE_ENV === "development") {
-    const menus = await Menus.find()
-    return res.status(418).json(menus)
-  } else {
+  try {
+    // Extraction des paramètres de requête avec valeurs par défaut
+    const { search = "", sortBy = "name", order = "asc", limit = 10, page = 1 } = req.query;
+
+    // Création de l'expression régulière pour la recherche
+    const searchRegex = new RegExp(search, "i");
+    const filter = {
+      $or: [
+        { name: { $regex: searchRegex } },
+        { address: { $regex: searchRegex } }
+      ]
+    };
+
+    // Détermination de l’ordre de tri (ascendant ou descendant)
+    const sortOrder = order === "desc" ? -1 : 1;
+
+    // Pagination
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    // Requête avec filtre, tri et pagination sur les menus
+    const _Menu = await Menus.find(filter)
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(parseInt(limit));
+  return res.status(200).json(_Menu)
+  } catch {
     return res.status(300).json({error:"Not allowed !"})
   }
 })
 
-// swagger création de menus
+
+// Création de Menus
 /**
  * @swagger
  * /menus:
@@ -86,8 +107,7 @@ router.get("/",async (req,res) => {
  *           schema:
  *             $ref: '#/components/schemas/Error'
  */
-// Création de Menus
-router.post("/",  requireAuth, async (req, res) => {
+router.post("/",  async (req, res) => {
   // Validation des données envoyées avant création
   const { error, value } = MenusCreate.validate(req.body);
   if (error) {
@@ -99,8 +119,7 @@ router.post("/",  requireAuth, async (req, res) => {
   res.status(201).json(menu);
 });
 
-
-// swagger lecture menus 
+// Lecture  menus
 /** 
  @swagger
  * /menus:
@@ -123,16 +142,13 @@ router.post("/",  requireAuth, async (req, res) => {
  *            schema:
  *              $ref: '#/components/schemas/Error'
  */
-
-// Lecture  menus
-router.get("/:id", requireAuth, async (req, res) => {
+router.get("/:id", async (req, res) => {
   const _Menus = await Menus.findById(req.params.id);
   if (!_Menus) return res.status(404).json({ message: "user not found" });
   res.json(_Menus);
 });
 
-
-// swagger patch menu
+// MAJ de menus, validation des données avec JOI
 /**
  * @swagger
  * /menus/<ID>:
@@ -175,8 +191,6 @@ router.get("/:id", requireAuth, async (req, res) => {
  *               $ref: '#/components/schemas/Menus'
  *              
  */
-
-// MAJ de menus, validation des données avec JOI
 router.patch("/:id", requireAuth, async (req, res) => {
   // Validation avec le schéma de mise à jour (champs optionnels)
   const { error, value } = MenusUpdate.validate(req.body);
@@ -189,7 +203,7 @@ router.patch("/:id", requireAuth, async (req, res) => {
   res.json(_Menus);
 });
 
-// swagger menus suppression
+// Suppression  Menus
 /**
  *  @swagger
  *  /menus/<ID>:
@@ -217,7 +231,6 @@ router.patch("/:id", requireAuth, async (req, res) => {
  *                  $ref: '#/components/schemas/Error'
  *            
  */
-// Suppression  Menus
 router.delete("/:id", requireAuth, async (req, res) => {
   try {
     const _Menus = await Menus.findByIdAndDelete(req.params.id);
@@ -227,4 +240,6 @@ router.delete("/:id", requireAuth, async (req, res) => {
     return res.status(400).json({ message: "Invalid ID format" });
   }
 });
+
+
 module.exports = router

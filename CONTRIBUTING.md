@@ -46,17 +46,17 @@ Unit testing can be ran through the command `npm test`
 - [x] Adjustable pagination limit (default 10, adjusted through query parameters)
 
 ### Other :
-- [ ] Documentation using swagger/openapi
+- [x] Documentation using swagger/openapi
   - [x] Doc pour /users **WIP** <-Camille
-  - [ ] Doc pour /restaurants **WIP** <-Seda
-  - [ ] Doc pour /menus **WIP** <-Seda
+  - [x] Doc pour /restaurants **WIP** <-Seda
+  - [x] Doc pour /menus **WIP** <-Seda
 - [x] Testing with mocha <-Seda/Camille
   - [x] Tests pour /users <-Camille
   - [x] Tests pour /restaurants <-Camille
   - [x] Tests pour /menus <-Camille
 - [x] Powerpoint **WIP** <-Seda/Camille
-- [ ] Nettoyer le code ;_;
-- [ ] Commenter un peu plus le code ;_;
+- [x] Nettoyer le code ;_;
+- [x] Commenter un peu plus le code ;_;
 
 ---
 # Nota Bene :

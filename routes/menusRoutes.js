@@ -107,7 +107,7 @@ router.get("/",async (req,res) => {
  *           schema:
  *             $ref: '#/components/schemas/Error'
  */
-router.post("/",  async (req, res) => {
+router.post("/", requireAuth, async (req, res) => {
   // Validation des données envoyées avant création
   const { error, value } = MenusCreate.validate(req.body);
   if (error) {
